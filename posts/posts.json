@@ -1,0 +1,71 @@
+[
+  {
+    "title": "本周AI要闻速览",
+    "week": 37,
+    "date": "2025-09-10",
+    "summary": "模型安全与可控性成为焦点，多家厂商发布对齐工具与风险评估框架。",
+    "tags": ["安全", "对齐", "评估"],
+    "links": [
+      { "title": "Google AI Blog", "url": "https://ai.googleblog.com/" },
+      { "title": "OpenAI 研究", "url": "https://openai.com/research" },
+      { "title": "arXiv: AI", "url": "https://arxiv.org/list/cs.AI/recent" }
+    ]
+  },
+  {
+    "title": "开源工具与框架更新",
+    "week": 36,
+    "date": "2025-09-03",
+    "summary": "大模型工具链更新，开源推理引擎优化，多模态能力落地更多场景。",
+    "tags": ["大模型", "开源", "多模态"],
+    "links": [
+      { "title": "OpenAI 更新", "url": "https://openai.com/" },
+      { "title": "Meta AI 研究", "url": "https://ai.facebook.com/" },
+      { "title": "Hugging Face 社区", "url": "https://huggingface.co/" }
+    ]
+  },
+  {
+    "title": "研究进展精选",
+    "week": 35,
+    "date": "2025-08-27",
+    "summary": "推理能力评测基准扩充，长上下文记忆与检索增强成为主线。",
+    "tags": ["RAG", "长上下文", "评测"],
+    "links": [
+      { "title": "Papers with Code", "url": "https://paperswithcode.com/" },
+      { "title": "EleutherAI", "url": "https://www.eleuther.ai/" }
+    ]
+  },
+  {
+    "title": "应用落地观察",
+    "week": 34,
+    "date": "2025-08-20",
+    "summary": "企业知识库问答、智能客服与代码助理持续渗透更多行业场景。",
+    "tags": ["企业应用", "Agent", "生产力"],
+    "links": [
+      { "title": "MosaicML 博客", "url": "https://www.mosaicml.com/blog" },
+      { "title": "LangChain 更新", "url": "https://blog.langchain.dev/" }
+    ]
+  },
+  {
+    "title": "工具与框架热点",
+    "week": 33,
+    "date": "2025-08-13",
+    "summary": "推理引擎与量化方案迭代，前后端协同优化成本与延迟。",
+    "tags": ["推理", "量化", "性能"],
+    "links": [
+      { "title": "vLLM", "url": "https://vllm.ai/" },
+      { "title": "TensorRT-LLM", "url": "https://github.com/NVIDIA/TensorRT-LLM" },
+      { "title": "onnxruntime", "url": "https://onnxruntime.ai/" }
+    ]
+  },
+  {
+    "title": "行业趋势与政策",
+    "week": 32,
+    "date": "2025-08-06",
+    "summary": "各地推动AIGC产业化试点，隐私合规与数据治理被进一步强调。",
+    "tags": ["政策", "数据治理", "合规"],
+    "links": [
+      { "title": "OECD AI", "url": "https://oecd.ai/" },
+      { "title": "AI Index", "url": "https://aiindex.stanford.edu/" }
+    ]
+  }
+]

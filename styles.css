@@ -1,0 +1,141 @@
+/* Starry sky theme and layout */
+:root {
+  --bg-deep: #060814;
+  --text-primary: #e6e9ef;
+  --text-muted: #a2a8b3;
+  --card-bg: rgba(22, 27, 44, 0.55);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --accent: #7aa2f7;
+  --accent-2: #b4f9f8;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  width: min(1100px, 92%);
+  margin: 0 auto;
+}
+
+.site-header {
+  position: relative;
+  padding: 64px 0 32px;
+  text-align: center;
+}
+.site-header h1 { 
+  margin: 0 0 8px; 
+  font-weight: 800; 
+  letter-spacing: 0.5px;
+}
+.tagline { 
+  margin: 0; 
+  color: var(--text-muted);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+.controls label { color: var(--text-muted); }
+.controls select, .controls input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.post-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px;
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.post-card:hover { 
+  transform: translateY(-3px); 
+  border-color: rgba(180, 249, 248, 0.35);
+}
+.post-card h3 { margin: 0 0 8px; font-size: 18px; }
+.post-card .meta { color: var(--text-muted); font-size: 12px; margin-bottom: 8px; }
+.post-card .summary { color: var(--text-primary); opacity: 0.9; }
+.post-card .links { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+.post-card .links a { color: var(--accent-2); text-decoration: none; border-bottom: 1px dashed rgba(180,249,248,0.5); }
+.post-card .tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 12px; padding: 4px 8px; border-radius: 999px; background: rgba(122,162,247,0.15); color: #c0cffc; border: 1px solid rgba(122,162,247,0.35); }
+
+.empty { text-align: center; color: var(--text-muted); margin: 40px 0; }
+
+.site-footer { text-align: center; color: var(--text-muted); padding: 40px 0; }
+
+/* Star layers (pure CSS twinkling) */
+#stars, #stars2, #stars3 {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: block;
+  z-index: -1;
+  background: transparent; /* placeholders for pseudo-elements */
+}
+
+/* Create star fields using gradients */
+body::before, body::after, #stars::before, #stars2::before, #stars3::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+/* distant star field */
+#stars::before {
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.5) 50%, transparent 51%),
+    radial-gradient(2px 2px at 220px 120px, rgba(180,249,248,0.5) 50%, transparent 51%);
+  background-size: 300px 200px;
+  animation: drift1 120s linear infinite;
+  opacity: 0.6;
+}
+
+/* mid star field */
+#stars2::before {
+  background-image:
+    radial-gradient(2px 2px at 60px 40px, rgba(255,255,255,0.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 160px 170px, rgba(122,162,247,0.8) 50%, transparent 51%),
+    radial-gradient(2px 2px at 260px 90px, rgba(255,255,255,0.7) 50%, transparent 51%);
+  background-size: 250px 220px;
+  animation: drift2 90s linear infinite;
+  opacity: 0.8;
+}
+
+/* near star field */
+#stars3::before {
+  background-image:
+    radial-gradient(2px 2px at 40px 140px, rgba(180,249,248,1) 50%, transparent 51%),
+    radial-gradient(2px 2px at 200px 40px, rgba(255,255,255,1) 50%, transparent 51%),
+    radial-gradient(3px 3px at 300px 180px, rgba(122,162,247,1) 50%, transparent 51%);
+  background-size: 220px 240px;
+  animation: drift3 60s linear infinite;
+  opacity: 1;
+}
+
+@keyframes drift1 { from { transform: translateY(0); } to { transform: translateY(-200px); } }
+@keyframes drift2 { from { transform: translateY(0); } to { transform: translateY(-300px); } }
+@keyframes drift3 { from { transform: translateY(0); } to { transform: translateY(-400px); } }
