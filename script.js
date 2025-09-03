@@ -21,13 +21,21 @@ function createPostCard(post) {
   const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
   const linksHtml = (post.links || []).map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.title || '链接'}</a>`).join('');
   const tagsHtml = (post.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+  const href = `post.html?id=${encodeURIComponent(post.id || '')}`;
   card.innerHTML = `
-    <h3>${post.title}</h3>
+    <h3><a class="post-link" href="${href}">${post.title}</a></h3>
     <div class="meta">${dateStr} · 第${post.week}周</div>
     <div class="summary">${post.summary || ''}</div>
     <div class="links">${linksHtml}</div>
     <div class="tags">${tagsHtml}</div>
   `;
+  // Make whole card clickable except when clicking external links
+  card.addEventListener('click', (e) => {
+    const withinExternal = e.target.closest && e.target.closest('.links');
+    const withinTitleLink = e.target.closest && e.target.closest('.post-link');
+    if (withinExternal || withinTitleLink) return;
+    if (post.id) window.location.href = href;
+  });
   return card;
 }
 

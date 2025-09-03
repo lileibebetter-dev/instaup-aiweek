@@ -1,5 +1,6 @@
 [
   {
+    "id": "2025-09-10-security-alignment",
     "title": "本周AI要闻速览",
     "week": 37,
     "date": "2025-09-10",
@@ -9,9 +10,11 @@
       { "title": "Google AI Blog", "url": "https://ai.googleblog.com/" },
       { "title": "OpenAI 研究", "url": "https://openai.com/research" },
       { "title": "arXiv: AI", "url": "https://arxiv.org/list/cs.AI/recent" }
-    ]
+    ],
+    "content": "<p>本周焦点转向<strong>模型安全</strong>与<strong>可控性</strong>。头部厂商发布对齐工具链与评估框架，涵盖越狱防护、红蓝对抗与敏感话题处理。</p><h4>看点</h4><ul><li>更系统的风险分级与测试集。</li><li>工具层面支持企业合规落地。</li></ul><p>建议结合自身业务场景，先从测评基线与最小合规集入手。</p>"
   },
   {
+    "id": "2025-09-03-oss-multimodal",
     "title": "开源工具与框架更新",
     "week": 36,
     "date": "2025-09-03",
@@ -21,9 +24,11 @@
       { "title": "OpenAI 更新", "url": "https://openai.com/" },
       { "title": "Meta AI 研究", "url": "https://ai.facebook.com/" },
       { "title": "Hugging Face 社区", "url": "https://huggingface.co/" }
-    ]
+    ],
+    "content": "<p>多模态组件趋于标准化，图像与文本的联合任务成本显著下降。</p><p>推理引擎方面，批处理、KV 缓存与连续批次更稳定，吞吐与延迟平衡更易调参。</p>"
   },
   {
+    "id": "2025-08-27-rag-long-context",
     "title": "研究进展精选",
     "week": 35,
     "date": "2025-08-27",
@@ -32,9 +37,11 @@
     "links": [
       { "title": "Papers with Code", "url": "https://paperswithcode.com/" },
       { "title": "EleutherAI", "url": "https://www.eleuther.ai/" }
-    ]
+    ],
+    "content": "<p>长上下文评测集增多，强调真实世界文档碎片下的鲁棒性。</p><p>RAG 体系更重视索引与重排质量，简单堆量已不再有效。</p>"
   },
   {
+    "id": "2025-08-20-enterprise-agents",
     "title": "应用落地观察",
     "week": 34,
     "date": "2025-08-20",
@@ -43,9 +50,11 @@
     "links": [
       { "title": "MosaicML 博客", "url": "https://www.mosaicml.com/blog" },
       { "title": "LangChain 更新", "url": "https://blog.langchain.dev/" }
-    ]
+    ],
+    "content": "<p>企业侧重 POC 到小规模上线，强调数据安全与可观测性。</p><p>建议优先落地高频、可量化的窄场景，逐步扩展。</p>"
   },
   {
+    "id": "2025-08-13-inference-quantization",
     "title": "工具与框架热点",
     "week": 33,
     "date": "2025-08-13",
@@ -55,9 +64,11 @@
       { "title": "vLLM", "url": "https://vllm.ai/" },
       { "title": "TensorRT-LLM", "url": "https://github.com/NVIDIA/TensorRT-LLM" },
       { "title": "onnxruntime", "url": "https://onnxruntime.ai/" }
-    ]
+    ],
+    "content": "<p>KV Cache 与并行调度策略进一步完善，在线服务可用性提升。</p><p>结合量化方案能显著降低成本，但需关注精度与漂移。</p>"
   },
   {
+    "id": "2025-08-06-policy-governance",
     "title": "行业趋势与政策",
     "week": 32,
     "date": "2025-08-06",
@@ -66,6 +77,7 @@
     "links": [
       { "title": "OECD AI", "url": "https://oecd.ai/" },
       { "title": "AI Index", "url": "https://aiindex.stanford.edu/" }
-    ]
+    ],
+    "content": "<p>政策层面强调可追溯、最小必要与数据主权。</p><p>建议在产品设计初期引入数据治理与审计机制。</p>"
   }
 ]

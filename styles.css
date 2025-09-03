@@ -74,6 +74,7 @@ html, body {
   border-color: rgba(180, 249, 248, 0.35);
 }
 .post-card h3 { margin: 0 0 8px; font-size: 18px; }
+.post-card h3 a { color: var(--text-primary); text-decoration: none; }
 .post-card .meta { color: var(--text-muted); font-size: 12px; margin-bottom: 8px; }
 .post-card .summary { color: var(--text-primary); opacity: 0.9; }
 .post-card .links { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -139,3 +140,17 @@ body::before, body::after, #stars::before, #stars2::before, #stars3::before {
 @keyframes drift1 { from { transform: translateY(0); } to { transform: translateY(-200px); } }
 @keyframes drift2 { from { transform: translateY(0); } to { transform: translateY(-300px); } }
 @keyframes drift3 { from { transform: translateY(0); } to { transform: translateY(-400px); } }
+
+/* Article page */
+.article { 
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 20px;
+  line-height: 1.8;
+}
+.article-title { margin-top: 0; }
+.article-content p { margin: 0 0 12px; }
+.article-content h4 { margin: 16px 0 8px; }
+.article-links a { color: var(--accent-2); text-decoration: none; border-bottom: 1px dashed rgba(180,249,248,0.5); }
+.link-back { color: var(--accent-2); text-decoration: none; }
