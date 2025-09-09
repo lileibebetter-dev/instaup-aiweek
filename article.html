@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>文章详情 | 云秒搭AI周报</title>
+  <title id="articlePageTitle">文章详情 | 云秒搭AI周报</title>
   <meta name="description" content="云秒搭AI周报精选文章详情页面" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,30 +13,82 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 </head>
 <body>
-  <div id="stars"></div>
-  <div id="stars2"></div>
-  <div id="stars3"></div>
+  <!-- 顶部导航栏 -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="top-bar-left">
+        <a href="#">云秒搭AI周报</a>
+        <a href="#">AI PLUS</a>
+      </div>
+      <div class="top-bar-right">
+        <span>中国 | 国际 | 亚洲</span>
+      </div>
+    </div>
+  </div>
 
+  <!-- 网站头部 -->
   <header class="site-header">
     <div class="container">
-      <h1><a href="index.html" style="color: inherit; text-decoration: none;">云秒搭AI周报</a></h1>
-      <p class="tagline">每周精选 · 洞察AI趋势 · 实用与前沿并重</p>
+      <div>
+        <h1><a href="index.html">云秒搭AI周报</a></h1>
+        <p class="tagline">每周精选 · 洞察AI趋势 · 实用与前沿并重</p>
+      </div>
+      <a href="#" class="subscribe-btn">订阅</a>
     </div>
   </header>
 
+  <!-- 主导航 -->
+  <nav class="main-nav">
+    <div class="container">
+      <div class="nav-container">
+        <a href="#" class="nav-item">最新</a>
+        <a href="#" class="nav-item">中国</a>
+        <a href="#" class="nav-item">经济</a>
+        <a href="#" class="nav-item">科技</a>
+        <a href="#" class="nav-item">亚洲</a>
+        <a href="#" class="nav-item">商业</a>
+        <a href="#" class="nav-item">技术</a>
+        <a href="#" class="nav-item">生活方式</a>
+        <a href="#" class="nav-item active">人物与文化</a>
+        <a href="#" class="nav-item">世界</a>
+        <a href="#" class="nav-item">观点</a>
+        <a href="#" class="nav-item">视频</a>
+        <a href="#" class="nav-item">体育</a>
+        <a href="#" class="nav-item">杂志</a>
+        <a href="#" class="nav-item">风格</a>
+        <a href="#" class="nav-item">游戏</a>
+        <a href="#" class="nav-item">全部</a>
+      </div>
+    </div>
+  </nav>
+
   <main class="container">
     <nav class="breadcrumb">
-      <a href="index.html">首页</a> > <span id="articleTitle">文章详情</span>
+      <a href="index.html">首页</a>
+      <span>→</span>
+      <a href="index.html#featuredArticles">文章精选</a>
+      <span>→</span>
+      <span id="breadcrumbTitle">文章详情</span>
     </nav>
 
-    <article id="articleContent" class="article-detail">
-      <!-- 文章内容将通过JavaScript动态加载 -->
+    <article class="article-detail">
+      <header class="article-header">
+        <h1 id="articleTitle" class="article-title">文章标题</h1>
+        <div class="article-meta">
+          <span id="articleSource" class="article-source">来源</span>
+          <span id="articleDate" class="article-date">日期</span>
+        </div>
+      </header>
+      
+      <div id="articleBody" class="article-body">
+        <p>正在加载文章内容...</p>
+      </div>
+      
+      <div class="article-actions">
+        <a href="index.html" class="btn-back">← 返回首页</a>
+        <a id="originalLink" href="#" target="_blank" class="btn-original">查看原文</a>
+      </div>
     </article>
-
-    <div class="article-actions">
-      <a href="index.html" class="btn-back">← 返回首页</a>
-      <a id="originalLink" href="#" target="_blank" class="btn-original">阅读原文 →</a>
-    </div>
   </main>
 
   <footer class="site-footer">
