@@ -135,21 +135,46 @@ html, body {
 .article-meta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-  font-size: 13px;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
   color: var(--text-muted);
+  flex-wrap: wrap;
 }
+
 .article-source {
-  background: rgba(122, 162, 247, 0.15);
-  color: #c0cffc;
-  padding: 4px 8px;
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(122, 162, 247, 0.2), rgba(180, 249, 248, 0.1));
+  color: var(--accent-2);
+  padding: 8px 16px;
+  border-radius: 20px;
   border: 1px solid rgba(122, 162, 247, 0.3);
-  font-weight: 500;
+  font-weight: 600;
+  position: relative;
+  backdrop-filter: blur(4px);
 }
+
+.article-source::before {
+  content: '📰';
+  margin-right: 6px;
+  font-size: 12px;
+}
+
 .article-date {
-  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 500;
+  position: relative;
+  backdrop-filter: blur(4px);
+}
+
+.article-date::before {
+  content: '📅';
+  margin-right: 6px;
+  font-size: 12px;
 }
 
 .article-summary {
@@ -303,37 +328,128 @@ body::before, body::after, #stars::before, #stars2::before, #stars3::before {
   margin: 20px 0;
   color: var(--text-muted);
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
 }
+
 .breadcrumb a {
   color: var(--accent-2);
   text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  position: relative;
 }
+
+.breadcrumb a::before {
+  content: '🏠';
+  margin-right: 4px;
+  font-size: 12px;
+}
+
 .breadcrumb a:hover {
-  text-decoration: underline;
+  background: rgba(180, 249, 248, 0.1);
+  transform: translateY(-1px);
+}
+
+.breadcrumb > span {
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 .article-detail {
-  background: var(--card-bg);
+  background: linear-gradient(135deg, var(--card-bg), rgba(22, 27, 44, 0.8));
   border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 32px;
+  border-radius: 20px;
+  padding: 40px;
   margin: 20px 0;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(12px);
   line-height: 1.8;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.3);
+}
+
+.article-detail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
+  border-radius: 20px 20px 0 0;
+}
+
+.article-detail::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(180, 249, 248, 0.03) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .article-header {
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 2px solid transparent;
+  background: linear-gradient(90deg, var(--card-border), transparent, var(--card-border)) bottom/100% 2px no-repeat;
+  position: relative;
+}
+
+.article-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 1px;
 }
 
 .article-title {
-  margin: 0 0 16px;
-  font-size: 28px;
+  margin: 0 0 20px;
+  font-size: 32px;
   font-weight: 700;
   line-height: 1.3;
   color: var(--text-primary);
+  text-align: center;
+  position: relative;
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.article-title::before {
+  content: '📖';
+  position: absolute;
+  left: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  opacity: 0.6;
+}
+
+.article-title::after {
+  content: '📖';
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  opacity: 0.6;
 }
 
 .article-body {
@@ -342,6 +458,7 @@ body::before, body::after, #stars::before, #stars2::before, #stars3::before {
   line-height: 1.8;
 }
 
+/* 优化文章内容样式，使其更好地融入星空主题 */
 .article-body h2 {
   margin: 32px 0 16px;
   font-size: 24px;
@@ -349,63 +466,175 @@ body::before, body::after, #stars::before, #stars2::before, #stars3::before {
   color: var(--text-primary);
   border-left: 4px solid var(--accent);
   padding-left: 16px;
+  position: relative;
+}
+
+.article-body h2::before {
+  content: '✨';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.7;
 }
 
 .article-body h3 {
   margin: 24px 0 12px;
   font-size: 20px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--accent-2);
+  position: relative;
+  padding-left: 20px;
+}
+
+.article-body h3::before {
+  content: '⭐';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.8;
 }
 
 .article-body p {
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   color: var(--text-primary);
   opacity: 0.9;
+  text-align: justify;
+  text-indent: 2em;
+}
+
+/* 首段不缩进 */
+.article-body p:first-of-type {
+  text-indent: 0;
 }
 
 .article-body ul, .article-body ol {
-  margin: 16px 0;
+  margin: 20px 0;
   padding-left: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 16px 16px 16px 40px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .article-body li {
   margin: 8px 0;
   color: var(--text-primary);
   opacity: 0.9;
+  position: relative;
+}
+
+.article-body ul li::before {
+  content: '🌟';
+  position: absolute;
+  left: -20px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.article-body ol li::before {
+  content: '💫';
+  position: absolute;
+  left: -20px;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
 .article-body blockquote {
   margin: 24px 0;
-  padding: 16px 20px;
-  background: rgba(122, 162, 247, 0.1);
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(122, 162, 247, 0.1), rgba(180, 249, 248, 0.05));
   border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 12px 12px 0;
   color: var(--text-primary);
   opacity: 0.9;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.article-body blockquote::before {
+  content: '"';
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  font-size: 32px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: serif;
 }
 
 .article-body code {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+  background: rgba(180, 249, 248, 0.15);
+  padding: 3px 8px;
+  border-radius: 6px;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 14px;
   color: var(--accent-2);
+  border: 1px solid rgba(180, 249, 248, 0.2);
 }
 
 .article-body pre {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 16px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(22, 27, 44, 0.6));
+  padding: 20px;
+  border-radius: 12px;
   overflow-x: auto;
-  margin: 16px 0;
+  margin: 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .article-body pre code {
   background: none;
   padding: 0;
   color: var(--text-primary);
+  border: none;
+}
+
+/* 图片样式优化 */
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.article-body img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* 链接样式 */
+.article-body a {
+  color: var(--accent-2);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(180, 249, 248, 0.5);
+  transition: all 0.2s ease;
+}
+
+.article-body a:hover {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-2);
+  background: rgba(180, 249, 248, 0.1);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+/* 强调文本 */
+.article-body strong {
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.article-body em {
+  color: var(--accent);
+  font-style: italic;
 }
 
 .article-actions {
