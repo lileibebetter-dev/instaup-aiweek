@@ -1,5 +1,14 @@
 [
   {
+    "id": "wechat-article-ai",
+    "title": "AI技术前沿深度解析",
+    "source": "微信公众号",
+    "summary": "深度探讨人工智能技术的最新发展趋势，涵盖大模型、机器学习、深度学习等前沿技术领域的专业分析。",
+    "url": "https://mp.weixin.qq.com/s/aIltul1-Pb8Oz7hrfWC8dA",
+    "date": "2025-01-20",
+    "tags": ["AI技术", "深度解析", "前沿趋势"]
+  },
+  {
     "id": "ai-trends-2025",
     "title": "2025年AI发展趋势预测",
     "source": "AI科技评论",
