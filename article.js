@@ -57,13 +57,16 @@ function renderArticle(article) {
 }
 
 async function init() {
+  console.log('开始初始化文章页面...');
   initFooterYear();
   
   // Get article ID from URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const articleId = urlParams.get('id');
+  console.log('文章ID:', articleId);
   
   if (!articleId) {
+    console.log('未找到文章ID');
     const articleBody = document.getElementById('articleBody');
     if (articleBody) {
       articleBody.innerHTML = '<p>未找到文章ID</p>';
@@ -72,12 +75,18 @@ async function init() {
   }
   
   try {
+    console.log('开始获取文章数据...');
     const articles = await fetchArticles();
+    console.log('获取到文章数量:', articles.length);
     const article = articles.find(a => a.id === articleId);
+    console.log('找到的文章:', article ? article.title : '未找到');
     
     if (article) {
+      console.log('开始渲染文章...');
       renderArticle(article);
+      console.log('文章渲染完成');
     } else {
+      console.log('未找到指定文章');
       const articleBody = document.getElementById('articleBody');
       if (articleBody) {
         articleBody.innerHTML = '<p>未找到指定文章</p>';
