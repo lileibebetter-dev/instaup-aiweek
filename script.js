@@ -8,6 +8,13 @@ async function fetchPosts() {
   return Array.isArray(data) ? data : data.posts || [];
 }
 
+async function fetchArticles() {
+  const response = await fetch('posts/articles.json', { cache: 'no-store' });
+  if (!response.ok) throw new Error('加载精选文章失败');
+  const data = await response.json();
+  return Array.isArray(data) ? data : [];
+}
+
 function renderYearOptions(posts) {
   const yearSelect = document.getElementById('yearSelect');
   const years = Array.from(new Set(posts.map(p => new Date(p.date).getFullYear()))).sort((a,b) => b - a);
@@ -39,6 +46,38 @@ function createPostCard(post) {
   return card;
 }
 
+function createArticleCard(article) {
+  const card = document.createElement('article');
+  card.className = 'article-card';
+  const date = new Date(article.date);
+  const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  const tagsHtml = (article.tags || []).map(t => `<span class="article-tag">${t}</span>`).join('');
+  
+  card.innerHTML = `
+    <h3><a href="${article.url}" target="_blank" rel="noopener">${article.title}</a></h3>
+    <div class="article-meta">
+      <span class="article-source">${article.source}</span>
+      <span class="article-date">${dateStr}</span>
+    </div>
+    <div class="article-summary">${article.summary}</div>
+    <div class="article-tags">${tagsHtml}</div>
+    <a href="${article.url}" target="_blank" rel="noopener" class="article-link">阅读原文</a>
+  `;
+  
+  return card;
+}
+
+function renderArticles(articles) {
+  const container = document.getElementById('articles');
+  container.innerHTML = '';
+  
+  articles
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .forEach(article => {
+      container.appendChild(createArticleCard(article));
+    });
+}
+
 function renderPosts(posts, { year = 'all', query = '' } = {}) {
   const wrap = document.getElementById('posts');
   const empty = document.getElementById('emptyState');
@@ -68,9 +107,16 @@ function initFooterYear() {
 
 async function init() {
   initFooterYear();
-  const posts = await fetchPosts();
+  
+  // Load and render both posts and articles
+  const [posts, articles] = await Promise.all([
+    fetchPosts(),
+    fetchArticles()
+  ]);
+  
   renderYearOptions(posts);
   renderPosts(posts);
+  renderArticles(articles);
 
   const yearSelect = document.getElementById('yearSelect');
   const searchInput = document.getElementById('searchInput');

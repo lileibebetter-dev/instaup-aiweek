@@ -1,0 +1,56 @@
+[
+  {
+    "id": "ai-trends-2025",
+    "title": "2025年AI发展趋势预测",
+    "source": "AI科技评论",
+    "summary": "深度分析2025年人工智能领域的关键趋势，包括大模型、多模态AI、AI Agent等前沿技术发展方向。",
+    "url": "https://example.com/ai-trends-2025",
+    "date": "2025-01-15",
+    "tags": ["趋势", "预测", "大模型"]
+  },
+  {
+    "id": "llm-optimization-guide",
+    "title": "大模型推理优化完全指南",
+    "source": "机器之心",
+    "summary": "从模型压缩、量化、并行推理等多个维度，详细介绍大模型推理优化的实用技巧和最佳实践。",
+    "url": "https://example.com/llm-optimization",
+    "date": "2025-01-10",
+    "tags": ["优化", "推理", "性能"]
+  },
+  {
+    "id": "rag-system-design",
+    "title": "企业级RAG系统架构设计",
+    "source": "AI前线",
+    "summary": "探讨如何构建稳定、高效的企业级RAG系统，包括数据预处理、向量检索、重排序等关键技术。",
+    "url": "https://example.com/rag-architecture",
+    "date": "2025-01-08",
+    "tags": ["RAG", "架构", "企业应用"]
+  },
+  {
+    "id": "ai-safety-research",
+    "title": "AI安全研究最新进展",
+    "source": "AI科技大本营",
+    "summary": "梳理当前AI安全领域的重要研究成果，包括对齐、可解释性、鲁棒性等核心问题的解决方案。",
+    "url": "https://example.com/ai-safety",
+    "date": "2025-01-05",
+    "tags": ["安全", "对齐", "研究"]
+  },
+  {
+    "id": "multimodal-ai-applications",
+    "title": "多模态AI在垂直领域的应用实践",
+    "source": "新智元",
+    "summary": "分析多模态AI在医疗、教育、金融等垂直领域的具体应用案例和落地经验。",
+    "url": "https://example.com/multimodal-applications",
+    "date": "2025-01-03",
+    "tags": ["多模态", "应用", "垂直领域"]
+  },
+  {
+    "id": "ai-agent-framework",
+    "title": "AI Agent开发框架对比分析",
+    "source": "AI研习社",
+    "summary": "对比分析主流AI Agent开发框架的特点和适用场景，帮助开发者选择合适的工具。",
+    "url": "https://example.com/ai-agent-frameworks",
+    "date": "2025-01-01",
+    "tags": ["Agent", "框架", "开发"]
+  }
+]
