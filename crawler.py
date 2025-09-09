@@ -214,6 +214,21 @@ class WeChatArticleCrawler:
         for elem in content_elem.find_all(['script', 'style', 'noscript']):
             elem.decompose()
         
+        # 移除隐藏样式
+        for elem in content_elem.find_all(attrs={'style': True}):
+            style = elem.get('style', '')
+            # 移除visibility: hidden和opacity: 0等隐藏样式
+            if 'visibility: hidden' in style or 'opacity: 0' in style:
+                # 保留其他样式，只移除隐藏相关的
+                new_style = re.sub(r'visibility\s*:\s*hidden[^;]*;?', '', style)
+                new_style = re.sub(r'opacity\s*:\s*0[^;]*;?', '', style)
+                new_style = re.sub(r';\s*;', ';', new_style)  # 清理多余的分号
+                new_style = new_style.strip('; ')
+                if new_style:
+                    elem['style'] = new_style
+                else:
+                    del elem['style']
+        
         # 处理图片
         for img in content_elem.find_all('img'):
             src = img.get('data-src') or img.get('src')
