@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>文章详情 | 云秒搭AI周报</title>
+  <meta name="description" content="云秒搭AI周报精选文章详情页面" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+</head>
+<body>
+  <div id="stars"></div>
+  <div id="stars2"></div>
+  <div id="stars3"></div>
+
+  <header class="site-header">
+    <div class="container">
+      <h1><a href="index.html" style="color: inherit; text-decoration: none;">云秒搭AI周报</a></h1>
+      <p class="tagline">每周精选 · 洞察AI趋势 · 实用与前沿并重</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb">
+      <a href="index.html">首页</a> > <span id="articleTitle">文章详情</span>
+    </nav>
+
+    <article id="articleContent" class="article-detail">
+      <!-- 文章内容将通过JavaScript动态加载 -->
+    </article>
+
+    <div class="article-actions">
+      <a href="index.html" class="btn-back">← 返回首页</a>
+      <a id="originalLink" href="#" target="_blank" class="btn-original">阅读原文 →</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="yearNow"></span> 云秒搭AI周报 · Weekly AI Digest</p>
+      <p class="muted">本站以中文为主，英文注释便于维护。</p>
+    </div>
+  </footer>
+
+  <script src="article.js"></script>
+</body>
+</html>
