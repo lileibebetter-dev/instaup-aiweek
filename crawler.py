@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
 import html
 import os
+import hashlib
 
 class WeChatArticleCrawler:
     def __init__(self):
@@ -26,6 +27,11 @@ class WeChatArticleCrawler:
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
         })
+        
+        # 创建图片目录
+        self.images_dir = 'images'
+        if not os.path.exists(self.images_dir):
+            os.makedirs(self.images_dir)
     
     def extract_article_id(self, url):
         """从微信公众号URL中提取文章ID"""
@@ -126,6 +132,9 @@ class WeChatArticleCrawler:
             
             # 提取正文内容
             content = self.extract_content(soup)
+            
+            # 处理图片下载
+            content = self.process_article_images(content, article_id)
             
             # 生成摘要
             summary = self.generate_summary(content)
@@ -295,6 +304,61 @@ class WeChatArticleCrawler:
             tags = ['技术', 'AI', '文章']
         
         return tags
+    
+    def download_image(self, image_url, article_id):
+        """下载图片并返回本地路径"""
+        try:
+            # 生成文件名
+            parsed_url = urlparse(image_url)
+            filename = os.path.basename(parsed_url.path)
+            
+            # 如果没有文件名，使用URL的hash
+            if not filename or '.' not in filename:
+                url_hash = hashlib.md5(image_url.encode()).hexdigest()
+                filename = f"{url_hash}.jpg"
+            
+            # 添加文章ID前缀避免冲突
+            filename = f"{article_id}_{filename}"
+            local_path = os.path.join(self.images_dir, filename)
+            
+            # 如果文件已存在，直接返回
+            if os.path.exists(local_path):
+                return f"./{self.images_dir}/{filename}"
+            
+            # 下载图片
+            print(f"正在下载图片: {image_url}")
+            response = self.session.get(image_url, timeout=30)
+            response.raise_for_status()
+            
+            # 保存图片
+            with open(local_path, 'wb') as f:
+                f.write(response.content)
+            
+            print(f"图片已保存: {local_path}")
+            return f"./{self.images_dir}/{filename}"
+            
+        except Exception as e:
+            print(f"下载图片失败 {image_url}: {e}")
+            return image_url  # 返回原URL作为备用
+    
+    def process_article_images(self, article_content, article_id):
+        """处理文章中的所有图片"""
+        if not article_content:
+            return article_content
+        
+        # 查找所有图片标签
+        img_pattern = r'<img[^>]+src=["\']([^"\']+)["\'][^>]*>'
+        img_matches = re.findall(img_pattern, article_content)
+        
+        for img_url in img_matches:
+            if 'mmbiz.qpic.cn' in img_url or 'res.wx.qq.com' in img_url:
+                # 下载图片
+                local_path = self.download_image(img_url, article_id)
+                
+                # 替换URL
+                article_content = article_content.replace(img_url, local_path)
+        
+        return article_content
     
     def update_articles_json(self, new_article):
         """更新articles.json文件"""
