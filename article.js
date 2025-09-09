@@ -14,39 +14,46 @@ function initFooterYear() {
 }
 
 function renderArticle(article) {
-  const articleContent = document.getElementById('articleContent');
-  const articleTitle = document.getElementById('articleTitle');
-  const originalLink = document.getElementById('originalLink');
-  
   // Update page title
   document.title = `${article.title} | 云秒搭AI周报`;
   
-  // Update breadcrumb
-  articleTitle.textContent = article.title;
+  // Update breadcrumb title
+  const breadcrumbTitle = document.getElementById('breadcrumbTitle');
+  if (breadcrumbTitle) {
+    breadcrumbTitle.textContent = article.title;
+  }
+  
+  // Update article title
+  const articleTitle = document.getElementById('articleTitle');
+  if (articleTitle) {
+    articleTitle.textContent = article.title;
+  }
+  
+  // Update article source
+  const articleSource = document.getElementById('articleSource');
+  if (articleSource) {
+    articleSource.textContent = article.source;
+  }
+  
+  // Update article date
+  const articleDate = document.getElementById('articleDate');
+  if (articleDate) {
+    const date = new Date(article.date);
+    const dateStr = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+    articleDate.textContent = dateStr;
+  }
+  
+  // Update article body
+  const articleBody = document.getElementById('articleBody');
+  if (articleBody) {
+    articleBody.innerHTML = article.content || '<p>文章内容加载中...</p>';
+  }
   
   // Update original link
-  originalLink.href = article.url;
-  
-  // Format date
-  const date = new Date(article.date);
-  const dateStr = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
-  
-  // Create article HTML
-  const tagsHtml = (article.tags || []).map(t => `<span class="article-tag">${t}</span>`).join('');
-  
-  articleContent.innerHTML = `
-    <header class="article-header">
-      <h1 class="article-title">${article.title}</h1>
-      <div class="article-meta">
-        <span class="article-source">${article.source}</span>
-        <span class="article-date">${dateStr}</span>
-      </div>
-      <div class="article-tags">${tagsHtml}</div>
-    </header>
-    <div class="article-body">
-      ${article.content || '<p>文章内容加载中...</p>'}
-    </div>
-  `;
+  const originalLink = document.getElementById('originalLink');
+  if (originalLink) {
+    originalLink.href = article.url;
+  }
 }
 
 async function init() {
@@ -57,7 +64,10 @@ async function init() {
   const articleId = urlParams.get('id');
   
   if (!articleId) {
-    document.getElementById('articleContent').innerHTML = '<p>未找到文章ID</p>';
+    const articleBody = document.getElementById('articleBody');
+    if (articleBody) {
+      articleBody.innerHTML = '<p>未找到文章ID</p>';
+    }
     return;
   }
   
@@ -68,11 +78,17 @@ async function init() {
     if (article) {
       renderArticle(article);
     } else {
-      document.getElementById('articleContent').innerHTML = '<p>未找到指定文章</p>';
+      const articleBody = document.getElementById('articleBody');
+      if (articleBody) {
+        articleBody.innerHTML = '<p>未找到指定文章</p>';
+      }
     }
   } catch (error) {
     console.error('加载文章失败:', error);
-    document.getElementById('articleContent').innerHTML = '<p>加载文章失败，请刷新页面重试。</p>';
+    const articleBody = document.getElementById('articleBody');
+    if (articleBody) {
+      articleBody.innerHTML = '<p>加载文章失败，请刷新页面重试。</p>';
+    }
   }
 }
 
