@@ -124,6 +124,9 @@ class WeChatArticleCrawler:
     def parse_article_content(self, soup, url):
         """解析文章内容"""
         try:
+            # 生成文章ID
+            article_id = self.extract_article_id(url) or f"article-{int(time.time())}"
+            
             # 提取标题
             title = self.extract_title(soup)
             
@@ -141,9 +144,6 @@ class WeChatArticleCrawler:
             
             # 提取标签
             tags = self.extract_tags(content, title)
-            
-            # 生成文章ID
-            article_id = self.extract_article_id(url) or f"article-{int(time.time())}"
             
             return {
                 'id': f'wechat-{article_id}',
