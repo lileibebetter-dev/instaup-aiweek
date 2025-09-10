@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章管理后台 | 云秒搭AI周报</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            min-height: 100vh;
+        }
+        
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0056b3;
+        }
+        
+        .admin-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .admin-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .admin-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: "📝";
+            margin-right: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #0056b3;
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #0056b3;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            background: #004494;
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .articles-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .article-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .article-item:last-child {
+            border-bottom: none;
+        }
+        
+        .article-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .article-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0056b3;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0056b3;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">文章管理后台</h1>
+            <p class="admin-subtitle">云秒搭AI周报 - 内容管理系统</p>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalArticles">-</div>
+                <div class="stat-label">总文章数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayArticles">-</div>
+                <div class="stat-label">今日新增</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalImages">-</div>
+                <div class="stat-label">图片总数</div>
+            </div>
+        </div>
+
+        <!-- 添加文章 -->
+        <div class="admin-section">
+            <h2 class="section-title">添加新文章</h2>
+            
+            <div id="statusMessage"></div>
+            
+            <form id="articleForm">
+                <div class="form-group">
+                    <label for="articleUrl" class="form-label">微信公众号文章链接</label>
+                    <input type="url" id="articleUrl" class="form-input" 
+                           placeholder="https://mp.weixin.qq.com/s/..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customTitle" class="form-label">自定义标题（可选）</label>
+                    <input type="text" id="customTitle" class="form-input" 
+                           placeholder="留空则使用原标题">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customTags" class="form-label">自定义标签（可选）</label>
+                    <input type="text" id="customTags" class="form-input" 
+                           placeholder="用逗号分隔，如：AI,技术,应用">
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">
+                    <span id="submitText">开始抓取文章</span>
+                </button>
+                
+                <button type="button" class="btn btn-success" id="previewBtn" style="display: none;">
+                    预览文章
+                </button>
+            </form>
+            
+            <div class="loading" id="loadingDiv">
+                <div class="spinner"></div>
+                <p>正在抓取文章内容，请稍候...</p>
+            </div>
+        </div>
+
+        <!-- 文章列表 -->
+        <div class="admin-section">
+            <h2 class="section-title">文章列表</h2>
+            
+            <div class="form-group">
+                <input type="text" id="searchInput" class="form-input" 
+                       placeholder="搜索文章标题或来源...">
+            </div>
+            
+            <div class="articles-list" id="articlesList">
+                <div style="text-align: center; padding: 20px; color: #666;">
+                    正在加载文章列表...
+                </div>
+            </div>
+        </div>
+
+        <!-- 系统操作 -->
+        <div class="admin-section">
+            <h2 class="section-title">系统操作</h2>
+            
+            <button class="btn btn-success" id="refreshBtn">刷新文章列表</button>
+            <button class="btn" id="syncBtn">同步到Git</button>
+            <button class="btn btn-danger" id="clearCacheBtn">清除缓存</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let articles = [];
+        let currentArticle = null;
+
+        // DOM 元素
+        const articleForm = document.getElementById('articleForm');
+        const articleUrl = document.getElementById('articleUrl');
+        const customTitle = document.getElementById('customTitle');
+        const customTags = document.getElementById('customTags');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const previewBtn = document.getElementById('previewBtn');
+        const loadingDiv = document.getElementById('loadingDiv');
+        const statusMessage = document.getElementById('statusMessage');
+        const articlesList = document.getElementById('articlesList');
+        const searchInput = document.getElementById('searchInput');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const syncBtn = document.getElementById('syncBtn');
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
+
+        // 统计元素
+        const totalArticles = document.getElementById('totalArticles');
+        const todayArticles = document.getElementById('todayArticles');
+        const totalImages = document.getElementById('totalImages');
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadArticles();
+            setupEventListeners();
+        });
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            articleForm.addEventListener('submit', handleSubmit);
+            searchInput.addEventListener('input', filterArticles);
+            refreshBtn.addEventListener('click', loadArticles);
+            syncBtn.addEventListener('click', syncToGit);
+            clearCacheBtn.addEventListener('click', clearCache);
+        }
+
+        // 处理表单提交
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            const url = articleUrl.value.trim();
+            if (!url) {
+                showMessage('请输入文章链接', 'error');
+                return;
+            }
+
+            if (!url.includes('mp.weixin.qq.com')) {
+                showMessage('请输入有效的微信公众号文章链接', 'error');
+                return;
+            }
+
+            try {
+                setLoading(true);
+                showMessage('开始抓取文章，请稍候...', 'info');
+
+                const response = await fetch('/api/crawl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        customTitle: customTitle.value.trim() || null,
+                        customTags: customTags.value.trim() || null
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('文章抓取成功！', 'success');
+                    currentArticle = result.article;
+                    previewBtn.style.display = 'inline-block';
+                    articleForm.reset();
+                    loadArticles();
+                } else {
+                    showMessage(`抓取失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`网络错误: ${error.message}`, 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // 加载文章列表
+        async function loadArticles() {
+            try {
+                const response = await fetch('/api/articles');
+                const data = await response.json();
+                
+                if (data.success) {
+                    articles = data.articles;
+                    renderArticles();
+                    updateStats();
+                } else {
+                    showMessage('加载文章列表失败', 'error');
+                }
+            } catch (error) {
+                showMessage(`加载失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 渲染文章列表
+        function renderArticles() {
+            if (articles.length === 0) {
+                articlesList.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">暂无文章</div>';
+                return;
+            }
+
+            const html = articles.map(article => `
+                <div class="article-item">
+                    <div class="article-info">
+                        <h4>${article.title}</h4>
+                        <div class="article-meta">
+                            来源: ${article.source} | 日期: ${article.date} | 标签: ${article.tags.join(', ')}
+                        </div>
+                    </div>
+                    <div class="article-actions">
+                        <button class="btn" onclick="viewArticle('${article.id}')">查看</button>
+                        <button class="btn btn-danger" onclick="deleteArticle('${article.id}')">删除</button>
+                    </div>
+                </div>
+            `).join('');
+
+            articlesList.innerHTML = html;
+        }
+
+        // 过滤文章
+        function filterArticles() {
+            const query = searchInput.value.toLowerCase();
+            const filteredArticles = articles.filter(article => 
+                article.title.toLowerCase().includes(query) ||
+                article.source.toLowerCase().includes(query)
+            );
+            
+            const html = filteredArticles.map(article => `
+                <div class="article-item">
+                    <div class="article-info">
+                        <h4>${article.title}</h4>
+                        <div class="article-meta">
+                            来源: ${article.source} | 日期: ${article.date} | 标签: ${article.tags.join(', ')}
+                        </div>
+                    </div>
+                    <div class="article-actions">
+                        <button class="btn" onclick="viewArticle('${article.id}')">查看</button>
+                        <button class="btn btn-danger" onclick="deleteArticle('${article.id}')">删除</button>
+                    </div>
+                </div>
+            `).join('');
+
+            articlesList.innerHTML = html;
+        }
+
+        // 查看文章
+        function viewArticle(articleId) {
+            window.open(`article.html?id=${articleId}`, '_blank');
+        }
+
+        // 删除文章
+        async function deleteArticle(articleId) {
+            if (!confirm('确定要删除这篇文章吗？')) return;
+
+            try {
+                const response = await fetch(`/api/articles/${articleId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('文章删除成功', 'success');
+                    loadArticles();
+                } else {
+                    showMessage(`删除失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`删除失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 同步到Git
+        async function syncToGit() {
+            try {
+                setLoading(true);
+                showMessage('正在同步到Git...', 'info');
+
+                const response = await fetch('/api/sync', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('同步成功！', 'success');
+                } else {
+                    showMessage(`同步失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`同步失败: ${error.message}`, 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // 清除缓存
+        async function clearCache() {
+            if (!confirm('确定要清除缓存吗？')) return;
+
+            try {
+                const response = await fetch('/api/clear-cache', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('缓存清除成功', 'success');
+                    loadArticles();
+                } else {
+                    showMessage(`清除失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`清除失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            totalArticles.textContent = articles.length;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const todayCount = articles.filter(article => article.date === today).length;
+            todayArticles.textContent = todayCount;
+            
+            // 计算图片总数（这里简化处理）
+            totalImages.textContent = articles.length * 5; // 假设每篇文章平均5张图片
+        }
+
+        // 设置加载状态
+        function setLoading(loading) {
+            submitBtn.disabled = loading;
+            loadingDiv.style.display = loading ? 'block' : 'none';
+            submitText.textContent = loading ? '抓取中...' : '开始抓取文章';
+        }
+
+        // 显示消息
+        function showMessage(message, type) {
+            statusMessage.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+            setTimeout(() => {
+                statusMessage.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
