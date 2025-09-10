@@ -286,8 +286,8 @@ def serve_static(filename):
 
 if __name__ == '__main__':
     print("🚀 启动文章管理后台服务器...")
-    print("📝 管理界面: http://localhost:5000")
-    print("📚 文章列表: http://localhost:5000/api/articles")
+    print("📝 管理界面: http://localhost:8080")
+    print("📚 文章列表: http://localhost:8080/api/articles")
     print("🔧 按 Ctrl+C 停止服务器")
     
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
