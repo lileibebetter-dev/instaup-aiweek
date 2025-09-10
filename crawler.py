@@ -308,6 +308,10 @@ class WeChatArticleCrawler:
     def download_image(self, image_url, article_id):
         """下载图片并返回本地路径"""
         try:
+            # 为每篇文章创建单独的文件夹
+            article_dir = os.path.join(self.images_dir, article_id)
+            os.makedirs(article_dir, exist_ok=True)
+            
             # 生成文件名
             parsed_url = urlparse(image_url)
             filename = os.path.basename(parsed_url.path)
@@ -319,11 +323,11 @@ class WeChatArticleCrawler:
             
             # 添加文章ID前缀避免冲突
             filename = f"{article_id}_{filename}"
-            local_path = os.path.join(self.images_dir, filename)
+            local_path = os.path.join(article_dir, filename)
             
             # 如果文件已存在，直接返回
             if os.path.exists(local_path):
-                return f"./{self.images_dir}/{filename}"
+                return f"./{self.images_dir}/{article_id}/{filename}"
             
             # 下载图片
             print(f"正在下载图片: {image_url}")
@@ -335,7 +339,7 @@ class WeChatArticleCrawler:
                 f.write(response.content)
             
             print(f"图片已保存: {local_path}")
-            return f"./{self.images_dir}/{filename}"
+            return f"./{self.images_dir}/{article_id}/{filename}"
             
         except Exception as e:
             print(f"下载图片失败 {image_url}: {e}")
