@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云秒搭AI周报 - 管理后台启动器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .status {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+        
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-checking { background: #ffc107; }
+        .status-success { background: #28a745; }
+        .status-error { background: #dc3545; }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .instructions h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚀 云秒搭AI周报</div>
+        <div class="subtitle">文章管理后台启动器</div>
+        
+        <div class="status" id="status">
+            <div class="status-item">
+                <span class="status-icon status-checking" id="serverStatus"></span>
+                <span id="serverText">检查服务器状态...</span>
+            </div>
+            <div class="status-item">
+                <span class="status-icon status-checking" id="apiStatus"></span>
+                <span id="apiText">检查API连接...</span>
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在启动服务器，请稍候...</p>
+        </div>
+        
+        <div id="buttons">
+            <button class="btn" id="startBtn" onclick="startServer()">🚀 启动管理后台</button>
+            <a href="admin.html" class="btn" id="openBtn" style="display: none;">📝 打开管理界面</a>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ol>
+                <li>点击"启动管理后台"按钮</li>
+                <li>等待服务器启动完成</li>
+                <li>点击"打开管理界面"进入后台</li>
+                <li>输入微信公众号文章链接即可抓取</li>
+            </ol>
+        </div>
+        
+        <div class="footer">
+            <p>💡 提示：首次使用需要安装Python依赖包</p>
+            <p>🔧 如遇问题，请检查Python环境是否正确安装</p>
+        </div>
+    </div>
+
+    <script>
+        let serverRunning = false;
+        
+        // 检查服务器状态
+        async function checkServerStatus() {
+            try {
+                const response = await fetch('http://localhost:8080/api/articles');
+                if (response.ok) {
+                    updateStatus('serverStatus', 'success', '服务器运行正常');
+                    updateStatus('apiStatus', 'success', 'API连接正常');
+                    serverRunning = true;
+                    document.getElementById('startBtn').style.display = 'none';
+                    document.getElementById('openBtn').style.display = 'inline-block';
+                    return true;
+                }
+            } catch (error) {
+                updateStatus('serverStatus', 'error', '服务器未运行');
+                updateStatus('apiStatus', 'error', 'API连接失败');
+                serverRunning = false;
+            }
+            return false;
+        }
+        
+        function updateStatus(elementId, status, text) {
+            const element = document.getElementById(elementId);
+            const textElement = document.getElementById(elementId.replace('Status', 'Text'));
+            
+            element.className = `status-icon status-${status}`;
+            textElement.textContent = text;
+        }
+        
+        async function startServer() {
+            const startBtn = document.getElementById('startBtn');
+            const loading = document.getElementById('loading');
+            
+            startBtn.disabled = true;
+            startBtn.textContent = '⏳ 启动中...';
+            loading.style.display = 'block';
+            
+            // 模拟启动过程
+            setTimeout(async () => {
+                // 检查服务器是否已经启动
+                const isRunning = await checkServerStatus();
+                
+                if (isRunning) {
+                    updateStatus('serverStatus', 'success', '服务器启动成功');
+                    updateStatus('apiStatus', 'success', 'API连接正常');
+                    startBtn.style.display = 'none';
+                    document.getElementById('openBtn').style.display = 'inline-block';
+                } else {
+                    // 尝试启动服务器
+                    try {
+                        // 这里可以添加启动服务器的逻辑
+                        // 由于浏览器安全限制，无法直接启动本地进程
+                        // 建议用户手动运行启动脚本
+                        alert('请手动运行启动脚本：\n\nWindows: 双击"启动管理后台.bat"\nmacOS/Linux: 运行"启动管理后台.sh"');
+                    } catch (error) {
+                        alert('启动失败，请检查Python环境');
+                    }
+                }
+                
+                loading.style.display = 'none';
+                startBtn.disabled = false;
+                startBtn.textContent = '🚀 启动管理后台';
+            }, 2000);
+        }
+        
+        // 页面加载时检查状态
+        window.onload = function() {
+            checkServerStatus();
+            
+            // 每5秒检查一次服务器状态
+            setInterval(checkServerStatus, 5000);
+        };
+    </script>
+</body>
+</html>
