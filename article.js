@@ -43,6 +43,13 @@ function renderArticle(article) {
     articleDate.textContent = dateStr;
   }
   
+  // Update article tags
+  const articleTags = document.getElementById('articleTags');
+  if (articleTags) {
+    const tagsHtml = (article.tags || []).map(t => `<span class="article-tag">${t}</span>`).join('');
+    articleTags.innerHTML = tagsHtml;
+  }
+
   // Update article body
   const articleBody = document.getElementById('articleBody');
   if (articleBody) {
