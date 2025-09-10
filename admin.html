@@ -381,7 +381,7 @@
                 setLoading(true);
                 showMessage('开始抓取文章，请稍候...', 'info');
 
-                const response = await fetch('http://localhost:8080/api/crawl', {
+                const response = await fetch('http://localhost:8888/api/crawl', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -414,7 +414,7 @@
         // 加载文章列表
         async function loadArticles() {
             try {
-                const response = await fetch('http://localhost:8080/api/articles');
+                const response = await fetch('http://localhost:8888/api/articles');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -490,7 +490,7 @@
             if (!confirm('确定要删除这篇文章吗？')) return;
 
             try {
-                const response = await fetch(`http://localhost:8080/api/articles/${articleId}`, {
+                const response = await fetch(`http://localhost:8888/api/articles/${articleId}`, {
                     method: 'DELETE'
                 });
 
@@ -513,7 +513,7 @@
                 setLoading(true);
                 showMessage('正在同步到Git...', 'info');
 
-                const response = await fetch('http://localhost:8080/api/sync', {
+                const response = await fetch('http://localhost:8888/api/sync', {
                     method: 'POST'
                 });
 
@@ -536,7 +536,7 @@
             if (!confirm('确定要清除缓存吗？')) return;
 
             try {
-                const response = await fetch('http://localhost:8080/api/clear-cache', {
+                const response = await fetch('http://localhost:8888/api/clear-cache', {
                     method: 'POST'
                 });
 
