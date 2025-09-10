@@ -42,7 +42,7 @@ class AdminLauncher:
         title_label = tk.Label(
             title_frame, 
             text="🚀 云秒搭AI周报管理后台", 
-            font=("Microsoft YaHei", 20, "bold"),
+            font=("Arial", 20, "bold"),
             fg='#2c3e50',
             bg='#f0f0f0'
         )
@@ -51,7 +51,7 @@ class AdminLauncher:
         subtitle_label = tk.Label(
             title_frame,
             text="文章管理后台启动器",
-            font=("Microsoft YaHei", 12),
+            font=("Arial", 12),
             fg='#7f8c8d',
             bg='#f0f0f0'
         )
@@ -61,7 +61,7 @@ class AdminLauncher:
         status_frame = tk.LabelFrame(
             self.root, 
             text="系统状态", 
-            font=("Microsoft YaHei", 10, "bold"),
+            font=("Arial", 10, "bold"),
             bg='#f0f0f0',
             fg='#2c3e50'
         )
@@ -84,7 +84,7 @@ class AdminLauncher:
         self.start_btn = tk.Button(
             button_frame,
             text="🚀 启动管理后台",
-            font=("Microsoft YaHei", 12, "bold"),
+            font=("Arial", 12, "bold"),
             bg='#3498db',
             fg='white',
             padx=20,
@@ -97,7 +97,7 @@ class AdminLauncher:
         self.stop_btn = tk.Button(
             button_frame,
             text="⏹️ 停止服务器",
-            font=("Microsoft YaHei", 12, "bold"),
+            font=("Arial", 12, "bold"),
             bg='#e74c3c',
             fg='white',
             padx=20,
@@ -111,7 +111,7 @@ class AdminLauncher:
         self.open_btn = tk.Button(
             button_frame,
             text="📝 打开管理界面",
-            font=("Microsoft YaHei", 12, "bold"),
+            font=("Arial", 12, "bold"),
             bg='#27ae60',
             fg='white',
             padx=20,
@@ -134,7 +134,7 @@ class AdminLauncher:
         self.status_label = tk.Label(
             self.root,
             text="准备就绪",
-            font=("Microsoft YaHei", 10),
+            font=("Arial", 10),
             fg='#27ae60',
             bg='#f0f0f0'
         )
@@ -189,7 +189,10 @@ class AdminLauncher:
     
     def start_server(self):
         """启动服务器"""
+        self.log("🔘 启动按钮被点击")
+        
         if self.server_running:
+            self.log("⚠️ 服务器已在运行")
             return
         
         self.log("正在启动服务器...")
@@ -226,8 +229,18 @@ class AdminLauncher:
     def check_server_status(self):
         """检查服务器状态"""
         try:
+            import requests
             response = requests.get('http://localhost:8080/api/articles', timeout=5)
             return response.status_code == 200
+        except ImportError:
+            self.log("❌ requests库未安装，正在安装...")
+            try:
+                subprocess.run([sys.executable, "-m", "pip", "install", "requests"], check=True)
+                import requests
+                response = requests.get('http://localhost:8080/api/articles', timeout=5)
+                return response.status_code == 200
+            except:
+                return False
         except:
             return False
     
