@@ -22,8 +22,13 @@ Thumbs.db
 
 # Build outputs
 _site/
+public/
 node_modules/
 
 # Temporary files
 *.tmp
 *.log
+
+# Project specific
+scripts/build_output/
+config/local_*

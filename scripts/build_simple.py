@@ -9,8 +9,8 @@ def build_simple_edgeone_site():
     """为EdgeOne Pages构建简化的白蓝色像素风网站"""
     print("🏗️  为EdgeOne Pages构建白蓝色像素风网站...")
     
-    # 读取文章数据
-    with open('posts/articles.json', 'r', encoding='utf-8') as f:
+    # 读取文章数据 (从项目根目录)
+    with open('../posts/articles.json', 'r', encoding='utf-8') as f:
         articles = json.load(f)
     
     print(f"📚 找到 {len(articles)} 篇文章")
@@ -136,7 +136,7 @@ def create_homepage(articles):
 </body>
 </html>"""
     
-    with open('index.html', 'w', encoding='utf-8') as f:
+    with open('../index.html', 'w', encoding='utf-8') as f:
         f.write(homepage_content)
     
     print("✅ 创建白蓝色像素风主页")
@@ -485,7 +485,7 @@ body {
     }
 }"""
     
-    with open('styles.css', 'w', encoding='utf-8') as f:
+    with open('../styles.css', 'w', encoding='utf-8') as f:
         f.write(styles)
     
     print("✅ 创建白蓝色像素风样式")
@@ -667,7 +667,7 @@ def create_article_pages(articles):
 </body>
 </html>"""
         
-        article_file = f"articles/{article_id}.html"
+        article_file = f"../articles/{article_id}.html"
         with open(article_file, 'w', encoding='utf-8') as f:
             f.write(article_html)
 
