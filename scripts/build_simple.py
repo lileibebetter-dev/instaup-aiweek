@@ -498,12 +498,17 @@ def create_article_pages(articles):
         article_id = article['id']
         print(f"📝 创建文章页面: {article['title'][:30]}...")
         
-        # 使用正则表达式修复图片路径
+        # 使用正则表达式修复图片路径和可见性问题
         content = article['content']
         # 修复 data-src 路径
         content = re.sub(r'data-src="images/', 'data-src="../images/', content)
         # 修复 src 路径
         content = re.sub(r'src="images/', 'src="../images/', content)
+        # 修复可见性问题：移除 visibility: hidden 和 opacity: 0
+        content = re.sub(r'style="[^"]*visibility:\s*hidden[^"]*"', 'style=""', content)
+        content = re.sub(r'style="[^"]*opacity:\s*0[^"]*"', 'style=""', content)
+        # 修复包含 visibility: hidden; opacity: 0; 的样式
+        content = re.sub(r'style="[^"]*visibility:\s*hidden;\s*opacity:\s*0;[^"]*"', 'style=""', content)
         
         article_html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
