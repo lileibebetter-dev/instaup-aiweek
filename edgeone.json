@@ -1,34 +1,14 @@
 {
   "name": "云秒搭AI周报",
-  "description": "Weekly AI Digest",
+  "description": "像素风AI资讯平台",
   "build": {
-    "command": "python3 create_static_site.py",
+    "command": "python3 rebuild_site.py",
     "output": "/"
   },
   "routes": [
     {
-      "src": "/article.html\\?id=(.*)",
+      "src": "/article.html\?id=(.*)",
       "dest": "/articles/$1.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/articles/*.html",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "/posts/articles.json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=300"
-        }
-      ]
     }
   ]
 }
