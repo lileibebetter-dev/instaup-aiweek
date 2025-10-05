@@ -311,6 +311,37 @@
             </div>
         </div>
 
+        <!-- 邮件发送 -->
+        <div class="admin-section">
+            <h2 class="section-title">📧 邮件发送</h2>
+            
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="emailRecipients" class="form-label">收件人邮箱</label>
+                    <textarea id="emailRecipients" class="form-input form-textarea" 
+                              placeholder="请输入收件人邮箱，多个邮箱用逗号分隔&#10;例如：user1@company.com, user2@company.com" 
+                              style="min-height: 80px;" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emailSubject" class="form-label">邮件主题</label>
+                    <input type="text" id="emailSubject" class="form-input" 
+                           placeholder="请输入邮件主题" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emailContent" class="form-label">邮件内容</label>
+                    <textarea id="emailContent" class="form-input form-textarea" 
+                              placeholder="请输入邮件内容..." 
+                              style="min-height: 200px;" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-success" id="sendEmailBtn">
+                    发送邮件
+                </button>
+            </form>
+        </div>
+
         <!-- 系统操作 -->
         <div class="admin-section">
             <h2 class="section-title">系统操作</h2>
@@ -341,6 +372,13 @@
         const refreshBtn = document.getElementById('refreshBtn');
         const syncBtn = document.getElementById('syncBtn');
         const clearCacheBtn = document.getElementById('clearCacheBtn');
+        
+        // 邮件发送相关元素
+        const emailForm = document.getElementById('emailForm');
+        const emailRecipients = document.getElementById('emailRecipients');
+        const emailSubject = document.getElementById('emailSubject');
+        const emailContent = document.getElementById('emailContent');
+        const sendEmailBtn = document.getElementById('sendEmailBtn');
 
         // 统计元素
         const totalArticles = document.getElementById('totalArticles');
@@ -360,6 +398,9 @@
             refreshBtn.addEventListener('click', loadArticles);
             syncBtn.addEventListener('click', syncToGit);
             clearCacheBtn.addEventListener('click', clearCache);
+            
+            // 邮件发送相关事件
+            emailForm.addEventListener('submit', handleEmailSubmit);
         }
 
         // 处理表单提交
@@ -578,6 +619,66 @@
             setTimeout(() => {
                 statusMessage.innerHTML = '';
             }, 5000);
+        }
+        
+        // ==================== 邮件发送功能 ====================
+        
+        // 处理邮件发送表单提交
+        async function handleEmailSubmit(e) {
+            e.preventDefault();
+            
+            const recipients = emailRecipients.value.trim();
+            const subject = emailSubject.value.trim();
+            const content = emailContent.value.trim();
+            
+            if (!recipients || !subject || !content) {
+                showMessage('请填写完整的邮件信息', 'error');
+                return;
+            }
+            
+            // 解析收件人邮箱列表
+            const toEmails = recipients.split(',').map(email => email.trim()).filter(email => email);
+            
+            if (toEmails.length === 0) {
+                showMessage('请输入有效的邮箱地址', 'error');
+                return;
+            }
+            
+            try {
+                sendEmailBtn.disabled = true;
+                sendEmailBtn.textContent = '发送中...';
+                showMessage('正在发送邮件，请稍候...', 'info');
+                
+                const response = await fetch('http://localhost:8888/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to_emails: toEmails,
+                        subject: subject,
+                        content: content
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(result.message, 'success');
+                    if (result.note) {
+                        showMessage(result.note, 'info');
+                    }
+                    // 清空表单
+                    emailForm.reset();
+                } else {
+                    showMessage(`发送失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`发送失败: ${error.message}`, 'error');
+            } finally {
+                sendEmailBtn.disabled = false;
+                sendEmailBtn.textContent = '发送邮件';
+            }
         }
     </script>
 </body>

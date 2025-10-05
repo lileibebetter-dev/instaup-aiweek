@@ -71,6 +71,7 @@ async function init() {
   const urlParams = new URLSearchParams(window.location.search);
   const articleId = urlParams.get('id');
   console.log('文章ID:', articleId);
+  console.log('当前URL:', window.location.href);
   
   if (!articleId) {
     console.log('未找到文章ID');
@@ -85,18 +86,32 @@ async function init() {
     console.log('开始获取文章数据...');
     const articles = await fetchArticles();
     console.log('获取到文章数量:', articles.length);
+    console.log('所有文章ID:', articles.map(a => a.id));
+    
     const article = articles.find(a => a.id === articleId);
     console.log('找到的文章:', article ? article.title : '未找到');
     
     if (article) {
       console.log('开始渲染文章...');
+      console.log('文章内容长度:', article.content ? article.content.length : '无内容');
       renderArticle(article);
       console.log('文章渲染完成');
     } else {
       console.log('未找到指定文章');
+      console.log('尝试查找包含该ID的文章...');
+      const partialMatch = articles.find(a => a.id.includes(articleId) || articleId.includes(a.id));
+      console.log('部分匹配的文章:', partialMatch ? partialMatch.title : '无');
+      
       const articleBody = document.getElementById('articleBody');
       if (articleBody) {
-        articleBody.innerHTML = '<p>未找到指定文章</p>';
+        articleBody.innerHTML = `
+          <p>未找到指定文章</p>
+          <p>查找的ID: ${articleId}</p>
+          <p>可用文章:</p>
+          <ul>
+            ${articles.map(a => `<li>${a.id}: ${a.title}</li>`).join('')}
+          </ul>
+        `;
       }
     }
   } catch (error) {

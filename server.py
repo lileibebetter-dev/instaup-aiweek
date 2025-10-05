@@ -60,7 +60,12 @@ def run_git_command(command):
 
 @app.route('/')
 def index():
-    """重定向到管理后台"""
+    """返回主页"""
+    return send_from_directory('.', 'index.html')
+
+@app.route('/admin')
+def admin():
+    """管理后台"""
     return send_from_directory('.', 'admin.html')
 
 @app.route('/api/articles', methods=['GET'])
@@ -133,7 +138,7 @@ def crawl_article():
         
         # 抓取文章
         print(f"开始抓取文章: {url}")
-        article_data = crawler.crawl_article(url)
+        article_data = crawler.fetch_article_content(url)
         
         if not article_data:
             return jsonify({
@@ -278,11 +283,51 @@ def get_stats():
             'error': str(e)
         }), 500
 
+# 简单邮件发送API
+@app.route('/api/send-email', methods=['POST'])
+def send_email():
+    """发送邮件"""
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+        
+        data = request.get_json()
+        to_emails = data.get('to_emails', [])
+        subject = data.get('subject', '')
+        content = data.get('content', '')
+        
+        if not to_emails or not subject or not content:
+            return jsonify({
+                'success': False,
+                'error': '缺少必要参数：to_emails, subject, content'
+            }), 400
+        
+        # 简单的邮件发送功能（需要配置SMTP）
+        # 这里只是一个示例，实际使用时需要配置SMTP服务器
+        
+        return jsonify({
+            'success': True,
+            'message': f'邮件发送成功，收件人：{", ".join(to_emails)}',
+            'note': '这是模拟发送，请配置SMTP服务器以实际发送邮件'
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 # 静态文件服务
 @app.route('/<path:filename>')
 def serve_static(filename):
     """提供静态文件服务"""
-    return send_from_directory('.', filename)
+    response = send_from_directory('.', filename)
+    # 禁用缓存，确保文件更新后立即生效
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 if __name__ == '__main__':
     print("🚀 启动文章管理后台服务器...")

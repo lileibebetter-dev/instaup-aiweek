@@ -1,59 +1,27 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title id="articlePageTitle">文章详情 | 云秒搭AI周报</title>
-  <meta name="description" content="云秒搭AI周报精选文章详情页面" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章详情 | 云秒搭AI周报</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- 网站头部 -->
   <header class="site-header">
     <div class="container">
-      <div>
-        <h1><a href="index.html">云秒搭AI周报</a></h1>
-        <p class="tagline">每周精选 · 洞察AI趋势 · 实用与前沿并重</p>
-      </div>
+      <h1><a href="index.html">云秒搭AI周报</a></h1>
     </div>
   </header>
 
-  <!-- 主导航 -->
-  <nav class="main-nav">
-    <div class="container">
-      <div class="nav-container">
-        <a href="index.html" class="nav-item">首页</a>
-        <a href="index.html#featuredArticles" class="nav-item">文章精选</a>
-        <a href="index.html#posts" class="nav-item">往期周报</a>
-        <a href="#" class="nav-item">AI技术</a>
-        <a href="#" class="nav-item">AI应用</a>
-        <a href="#" class="nav-item">关于我们</a>
-      </div>
-    </div>
-  </nav>
-
   <main class="container">
-    <nav class="breadcrumb">
-      <a href="index.html">首页</a>
-      <span>→</span>
-      <a href="index.html#featuredArticles">文章精选</a>
-      <span>→</span>
-      <span id="breadcrumbTitle">文章详情</span>
-    </nav>
-
     <article class="article-detail">
       <header class="article-header">
-        <h1 id="articleTitle" class="article-title">文章标题</h1>
+        <h1 id="articleTitle">加载中...</h1>
         <div class="article-meta">
-          <span id="articleSource" class="article-source">来源</span>
-          <span id="articleDate" class="article-date">日期</span>
+          <span id="articleSource">来源</span>
+          <span id="articleDate">日期</span>
         </div>
-        <div id="articleTags" class="article-tags"></div>
+        <div id="articleTags"></div>
       </header>
       
       <div id="articleBody" class="article-body">
@@ -61,19 +29,59 @@
       </div>
       
       <div class="article-actions">
-        <a href="index.html" class="btn-back">← 返回首页</a>
-        <a id="originalLink" href="#" target="_blank" class="btn-original">查看原文</a>
+        <a href="index.html">← 返回首页</a>
+        <a id="originalLink" href="#" target="_blank">查看原文</a>
       </div>
     </article>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>© <span id="yearNow"></span> 云秒搭AI周报 · Weekly AI Digest</p>
-      <p class="muted">本站以中文为主，英文注释便于维护。</p>
-    </div>
-  </footer>
-
-  <script src="article.js"></script>
+  <script>
+    // 立即执行
+    (function() {
+      console.log('开始加载文章...');
+      
+      // 获取文章ID
+      const urlParams = new URLSearchParams(window.location.search);
+      const articleId = urlParams.get('id');
+      console.log('文章ID:', articleId);
+      
+      if (!articleId) {
+        document.getElementById('articleBody').innerHTML = '<p>未找到文章ID</p>';
+        return;
+      }
+      
+      // 获取文章数据
+      fetch('posts/articles.json')
+        .then(response => response.json())
+        .then(articles => {
+          console.log('获取到文章数量:', articles.length);
+          
+          const article = articles.find(a => a.id === articleId);
+          console.log('找到文章:', article ? article.title : '未找到');
+          
+          if (article) {
+            // 更新页面内容
+            document.title = article.title + ' | 云秒搭AI周报';
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleSource').textContent = article.source;
+            document.getElementById('articleDate').textContent = article.date;
+            document.getElementById('articleBody').innerHTML = article.content;
+            document.getElementById('originalLink').href = article.url;
+            
+            // 更新标签
+            const tagsHtml = article.tags.map(tag => `<span class="article-tag">${tag}</span>`).join('');
+            document.getElementById('articleTags').innerHTML = tagsHtml;
+            
+            console.log('文章加载完成');
+          } else {
+            document.getElementById('articleBody').innerHTML = '<p>未找到指定文章</p>';
+          }
+        })
+        .catch(error => {
+          console.error('加载失败:', error);
+          document.getElementById('articleBody').innerHTML = '<p>加载失败: ' + error.message + '</p>';
+        });
+    })();
+  </script>
 </body>
 </html>
