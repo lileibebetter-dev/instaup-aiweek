@@ -11,7 +11,7 @@ import subprocess
 import asyncio
 from datetime import datetime
 from pathlib import Path
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 import sys
 
@@ -20,7 +20,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 导入爬虫模块
 from crawler import WeChatArticleCrawler
-from zsxq_crawler import ZSXQCrawler
+from pdf_processor import PDFProcessor
 
 app = Flask(__name__)
 CORS(app)  # 允许跨域请求
@@ -134,18 +134,16 @@ def crawl_article():
                 'error': '缺少文章链接'
             }), 400
         
-        # 根据URL类型选择爬虫
-        if 'wx.zsxq.com' in url:
-            crawler = ZSXQCrawler()
-            print(f"使用知识星球爬虫抓取文章: {url}")
-        elif 'mp.weixin.qq.com' in url:
-            crawler = WeChatArticleCrawler()
-            print(f"使用微信公众号爬虫抓取文章: {url}")
-        else:
+        # 验证URL类型
+        if 'mp.weixin.qq.com' not in url:
             return jsonify({
                 'success': False,
-                'error': '不支持的网站类型，目前支持微信公众号(mp.weixin.qq.com)和知识星球(wx.zsxq.com)'
+                'error': '目前只支持微信公众号文章链接 (mp.weixin.qq.com)'
             }), 400
+        
+        # 创建爬虫实例
+        crawler = WeChatArticleCrawler()
+        print(f"使用微信公众号爬虫抓取文章: {url}")
         
         # 抓取文章
         print(f"开始抓取文章: {url}")
@@ -420,6 +418,117 @@ def build_site():
             'success': False,
             'error': str(e)
         }), 500
+
+# PDF处理相关API
+@app.route('/api/upload-pdf', methods=['POST'])
+def upload_pdf():
+    """上传PDF文件并生成解读文章"""
+    try:
+        # 检查是否有文件上传
+        if 'file' not in request.files:
+            return jsonify({
+                'success': False,
+                'error': '没有上传文件'
+            }), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({
+                'success': False,
+                'error': '没有选择文件'
+            }), 400
+        
+        # 获取自定义参数
+        custom_title = request.form.get('customTitle')
+        custom_tags = request.form.get('customTags')
+        
+        # 创建PDF处理器
+        processor = PDFProcessor()
+        
+        # 保存PDF文件
+        pdf_path, error = processor.save_pdf(file)
+        if error:
+            return jsonify({
+                'success': False,
+                'error': error
+            }), 400
+        
+        # 从PDF创建文章
+        article_data, error = processor.create_article_from_pdf(
+            pdf_path, custom_title, custom_tags
+        )
+        
+        if error:
+            return jsonify({
+                'success': False,
+                'error': error
+            }), 500
+        
+        # 更新文章列表
+        if processor.update_articles_json(article_data):
+            return jsonify({
+                'success': True,
+                'message': 'PDF解读文章生成成功',
+                'article': article_data
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '保存文章失败'
+            }), 500
+            
+    except Exception as e:
+        print(f"PDF上传处理失败: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/download-pdf/<filename>')
+def download_pdf(filename):
+    """下载PDF文件"""
+    try:
+        pdf_dir = 'uploads/pdf'
+        if not os.path.exists(pdf_dir):
+            return jsonify({'error': 'PDF目录不存在'}), 404
+        
+        pdf_path = os.path.join(pdf_dir, filename)
+        if not os.path.exists(pdf_path):
+            return jsonify({'error': 'PDF文件不存在'}), 404
+        
+        return send_file(pdf_path, as_attachment=True)
+        
+    except Exception as e:
+        print(f"PDF下载失败: {e}")
+        return jsonify({'error': '下载失败'}), 500
+
+@app.route('/api/pdf-list')
+def list_pdfs():
+    """获取PDF文件列表"""
+    try:
+        pdf_dir = 'uploads/pdf'
+        if not os.path.exists(pdf_dir):
+            return jsonify({'pdfs': []})
+        
+        pdfs = []
+        for filename in os.listdir(pdf_dir):
+            if filename.endswith('.pdf'):
+                file_path = os.path.join(pdf_dir, filename)
+                file_size = os.path.getsize(file_path)
+                file_time = os.path.getmtime(file_path)
+                
+                pdfs.append({
+                    'filename': filename,
+                    'size': file_size,
+                    'upload_time': datetime.fromtimestamp(file_time).strftime('%Y-%m-%d %H:%M:%S'),
+                    'download_url': f'/api/download-pdf/{filename}'
+                })
+        
+        return jsonify({'pdfs': pdfs})
+        
+    except Exception as e:
+        print(f"获取PDF列表失败: {e}")
+        return jsonify({'error': '获取列表失败'}), 500
 
 # 静态文件服务
 @app.route('/<path:filename>')

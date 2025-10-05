@@ -103,6 +103,51 @@
             background: #004494;
         }
         
+        /* 文章类型选择器 */
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .type-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .type-btn.active {
+            background: #0056b3;
+            color: white;
+            border-color: #0056b3;
+        }
+        
+        .type-btn:hover {
+            border-color: #0056b3;
+        }
+        
+        /* 表单切换 */
+        .article-form {
+            display: none;
+        }
+        
+        .article-form.active {
+            display: block;
+        }
+        
+        .form-help {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 12px;
+        }
+        
         .btn:disabled {
             background: #ccc;
             cursor: not-allowed;
@@ -342,20 +387,25 @@
             
             <div id="statusMessage"></div>
             
-            <form id="articleForm">
-                <div class="form-group">
-                    <label for="siteType" class="form-label">网站类型</label>
-                    <select id="siteType" class="form-input" required>
-                        <option value="">请选择网站类型</option>
-                        <option value="wechat">微信公众号 (mp.weixin.qq.com)</option>
-                        <option value="zsxq">知识星球 (wx.zsxq.com)</option>
-                    </select>
+            <!-- 文章类型选择 -->
+            <div class="form-group">
+                <label class="form-label">选择文章类型</label>
+                <div class="type-selector">
+                    <button type="button" class="type-btn active" data-type="wechat">
+                        📰 微信公众号文章
+                    </button>
+                    <button type="button" class="type-btn" data-type="pdf">
+                        📄 PDF文档解读
+                    </button>
                 </div>
-                
+            </div>
+            
+            <!-- 微信公众号文章表单 -->
+            <form id="articleForm" class="article-form active">
                 <div class="form-group">
-                    <label for="articleUrl" class="form-label">文章链接</label>
+                    <label for="articleUrl" class="form-label">微信公众号文章链接</label>
                     <input type="url" id="articleUrl" class="form-input" 
-                           placeholder="请输入文章链接..." required>
+                           placeholder="https://mp.weixin.qq.com/s/..." required>
                 </div>
                 
                 <div class="form-group">
@@ -375,6 +425,35 @@
                 </button>
                 
                 <button type="button" class="btn btn-success" id="previewBtn" style="display: none;">
+                    预览文章
+                </button>
+            </form>
+            
+            <!-- PDF文档解读表单 -->
+            <form id="pdfForm" class="article-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="pdfFile" class="form-label">选择PDF文件</label>
+                    <input type="file" id="pdfFile" class="form-input" accept=".pdf" required>
+                    <small class="form-help">支持PDF格式，文件大小不超过50MB</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pdfTitle" class="form-label">自定义标题（可选）</label>
+                    <input type="text" id="pdfTitle" class="form-input" 
+                           placeholder="留空则使用文件名">
+                </div>
+                
+                <div class="form-group">
+                    <label for="pdfTags" class="form-label">自定义标签（可选）</label>
+                    <input type="text" id="pdfTags" class="form-input" 
+                           placeholder="用逗号分隔，如：PDF解读,文档分析,AI解读">
+                </div>
+                
+                <button type="submit" class="btn" id="pdfSubmitBtn">
+                    <span id="pdfSubmitText">上传并生成解读文章</span>
+                </button>
+                
+                <button type="button" class="btn btn-success" id="pdfPreviewBtn" style="display: none;">
                     预览文章
                 </button>
             </form>
@@ -470,13 +549,19 @@
 
         // DOM 元素
         const articleForm = document.getElementById('articleForm');
-        const siteTypeSelect = document.getElementById('siteType');
+        const pdfForm = document.getElementById('pdfForm');
         const articleUrl = document.getElementById('articleUrl');
         const customTitle = document.getElementById('customTitle');
         const customTags = document.getElementById('customTags');
+        const pdfFile = document.getElementById('pdfFile');
+        const pdfTitle = document.getElementById('pdfTitle');
+        const pdfTags = document.getElementById('pdfTags');
         const submitBtn = document.getElementById('submitBtn');
         const submitText = document.getElementById('submitText');
+        const pdfSubmitBtn = document.getElementById('pdfSubmitBtn');
+        const pdfSubmitText = document.getElementById('pdfSubmitText');
         const previewBtn = document.getElementById('previewBtn');
+        const pdfPreviewBtn = document.getElementById('pdfPreviewBtn');
         const loadingDiv = document.getElementById('loadingDiv');
         const statusMessage = document.getElementById('statusMessage');
         const articlesList = document.getElementById('articlesList');
@@ -515,28 +600,117 @@
         // 设置事件监听器
         function setupEventListeners() {
             articleForm.addEventListener('submit', handleSubmit);
+            pdfForm.addEventListener('submit', handlePdfSubmit);
             searchInput.addEventListener('input', filterArticles);
             refreshBtn.addEventListener('click', loadArticles);
             buildSiteBtn.addEventListener('click', buildSite);
             syncBtn.addEventListener('click', syncToGit);
             clearCacheBtn.addEventListener('click', clearCache);
             
-            // 网站类型选择事件
-            siteTypeSelect.addEventListener('change', updateUrlPlaceholder);
+            // 文章类型切换
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.addEventListener('click', switchArticleType);
+            });
             
             // 邮件发送相关事件
             emailForm.addEventListener('submit', handleEmailSubmit);
         }
         
-        // 更新URL输入框的占位符
-        function updateUrlPlaceholder() {
-            const siteType = siteTypeSelect.value;
-            if (siteType === 'wechat') {
-                articleUrl.placeholder = 'https://mp.weixin.qq.com/s/...';
-            } else if (siteType === 'zsxq') {
-                articleUrl.placeholder = 'https://wx.zsxq.com/group/.../topic/...';
-            } else {
-                articleUrl.placeholder = '请输入文章链接...';
+        // 切换文章类型
+        function switchArticleType(e) {
+            const type = e.target.dataset.type;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            e.target.classList.add('active');
+            
+            // 切换表单
+            document.querySelectorAll('.article-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            if (type === 'wechat') {
+                document.getElementById('articleForm').classList.add('active');
+            } else if (type === 'pdf') {
+                document.getElementById('pdfForm').classList.add('active');
+            }
+        }
+        
+        // 处理PDF上传
+        async function handlePdfSubmit(e) {
+            e.preventDefault();
+            
+            const file = pdfFile.files[0];
+            if (!file) {
+                showMessage('请选择PDF文件', 'error');
+                return;
+            }
+            
+            // 检查文件类型
+            if (!file.type.includes('pdf')) {
+                showMessage('请选择PDF格式的文件', 'error');
+                return;
+            }
+            
+            // 检查文件大小 (50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                showMessage('文件大小不能超过50MB', 'error');
+                return;
+            }
+            
+            try {
+                setLoading(true);
+                showMessage('正在上传PDF并生成解读文章，请稍候...', 'info');
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('customTitle', pdfTitle.value.trim() || '');
+                formData.append('customTags', pdfTags.value.trim() || '');
+                
+                const response = await fetch('http://localhost:8888/api/upload-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('PDF解读文章生成成功！正在重新构建网站...', 'success');
+                    currentArticle = result.article;
+                    pdfPreviewBtn.style.display = 'inline-block';
+                    pdfForm.reset();
+                    loadArticles();
+                    
+                    // 自动重新构建网站
+                    setTimeout(async () => {
+                        try {
+                            showMessage('正在重新构建网站...', 'info');
+                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
+                                method: 'POST'
+                            });
+                            const buildResult = await buildResponse.json();
+                            
+                            if (buildResult.success) {
+                                showMessage('网站重新构建成功！', 'success');
+                            } else {
+                                showMessage(`网站构建失败: ${buildResult.error}`, 'error');
+                            }
+                        } catch (error) {
+                            showMessage(`网站构建出错: ${error.message}`, 'error');
+                        }
+                        
+                        // 刷新Git状态
+                        checkGitStatus();
+                    }, 2000);
+                } else {
+                    showMessage(`PDF处理失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`上传失败: ${error.message}`, 'error');
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -544,27 +718,14 @@
         async function handleSubmit(e) {
             e.preventDefault();
             
-            const siteType = siteTypeSelect.value;
             const url = articleUrl.value.trim();
-            
-            if (!siteType) {
-                showMessage('请选择网站类型', 'error');
-                return;
-            }
-            
             if (!url) {
                 showMessage('请输入文章链接', 'error');
                 return;
             }
 
-            // 验证URL格式
-            if (siteType === 'wechat' && !url.includes('mp.weixin.qq.com')) {
+            if (!url.includes('mp.weixin.qq.com')) {
                 showMessage('请输入有效的微信公众号文章链接', 'error');
-                return;
-            }
-            
-            if (siteType === 'zsxq' && !url.includes('wx.zsxq.com')) {
-                showMessage('请输入有效的知识星球文章链接', 'error');
                 return;
             }
 
