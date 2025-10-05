@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>云秒搭AI周报 | Weekly AI Digest</title>
+  <meta name="description" content="云秒搭AI周报：每周更新AI相关讯息与洞察。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+</head>
+<body>
+  <!-- 网站头部 -->
+  <header class="site-header">
+    <div class="container">
+      <div>
+        <h1><a href="index.html">云秒搭AI周报</a></h1>
+        <p class="tagline">每周精选 · 洞察AI趋势 · 实用与前沿并重</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主导航 -->
+  <nav class="main-nav">
+    <div class="container">
+      <div class="nav-container">
+        <a href="#" class="nav-item active">首页</a>
+        <a href="#featuredArticles" class="nav-item">文章精选</a>
+        <a href="#posts" class="nav-item">往期周报</a>
+        <a href="#" class="nav-item">AI技术</a>
+        <a href="#" class="nav-item">AI应用</a>
+        <a href="#" class="nav-item">关于我们</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 热门话题栏 -->
+  <div class="trending-bar">
+    <div class="container">
+      <div class="trending-container">
+        <span class="trending-label">热门</span>
+        <div class="trending-topics">
+          <a href="#" class="trending-topic">#AI大模型</a>
+          <a href="#" class="trending-topic">#机器学习</a>
+          <a href="#" class="trending-topic">#深度学习</a>
+          <a href="#" class="trending-topic">#AI应用</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="controls">
+      <label for="yearSelect">年度</label>
+      <select id="yearSelect"></select>
+      <label for="searchInput">搜索</label>
+      <input id="searchInput" type="search" placeholder="按关键词搜索..." />
+    </section>
+
+    <section id="featuredArticles" class="featured-articles">
+      <h2>文章精选</h2>
+      <div id="articles" class="articles"></div>
+    </section>
+
+    <section id="posts" class="posts"></section>
+
+    <section id="emptyState" class="empty" hidden>
+      <p>未找到匹配内容，请调整筛选条件。</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="yearNow"></span> 云秒搭AI周报 · Weekly AI Digest</p>
+      <p class="muted">本站以中文为主，英文注释便于维护。</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
