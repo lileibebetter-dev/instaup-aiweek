@@ -8,6 +8,9 @@
 import os
 import sys
 
+# 确保在项目根目录运行
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 # 添加scripts目录到Python路径
 sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
 
