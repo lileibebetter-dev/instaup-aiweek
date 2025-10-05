@@ -20,6 +20,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 导入爬虫模块
 from crawler import WeChatArticleCrawler
+from zsxq_crawler import ZSXQCrawler
 
 app = Flask(__name__)
 CORS(app)  # 允许跨域请求
@@ -133,8 +134,18 @@ def crawl_article():
                 'error': '缺少文章链接'
             }), 400
         
-        # 创建爬虫实例
-        crawler = WeChatArticleCrawler()
+        # 根据URL类型选择爬虫
+        if 'wx.zsxq.com' in url:
+            crawler = ZSXQCrawler()
+            print(f"使用知识星球爬虫抓取文章: {url}")
+        elif 'mp.weixin.qq.com' in url:
+            crawler = WeChatArticleCrawler()
+            print(f"使用微信公众号爬虫抓取文章: {url}")
+        else:
+            return jsonify({
+                'success': False,
+                'error': '不支持的网站类型，目前支持微信公众号(mp.weixin.qq.com)和知识星球(wx.zsxq.com)'
+            }), 400
         
         # 抓取文章
         print(f"开始抓取文章: {url}")

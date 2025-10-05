@@ -344,9 +344,18 @@
             
             <form id="articleForm">
                 <div class="form-group">
-                    <label for="articleUrl" class="form-label">微信公众号文章链接</label>
+                    <label for="siteType" class="form-label">网站类型</label>
+                    <select id="siteType" class="form-input" required>
+                        <option value="">请选择网站类型</option>
+                        <option value="wechat">微信公众号 (mp.weixin.qq.com)</option>
+                        <option value="zsxq">知识星球 (wx.zsxq.com)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleUrl" class="form-label">文章链接</label>
                     <input type="url" id="articleUrl" class="form-input" 
-                           placeholder="https://mp.weixin.qq.com/s/..." required>
+                           placeholder="请输入文章链接..." required>
                 </div>
                 
                 <div class="form-group">
@@ -461,6 +470,7 @@
 
         // DOM 元素
         const articleForm = document.getElementById('articleForm');
+        const siteTypeSelect = document.getElementById('siteType');
         const articleUrl = document.getElementById('articleUrl');
         const customTitle = document.getElementById('customTitle');
         const customTags = document.getElementById('customTags');
@@ -511,22 +521,50 @@
             syncBtn.addEventListener('click', syncToGit);
             clearCacheBtn.addEventListener('click', clearCache);
             
+            // 网站类型选择事件
+            siteTypeSelect.addEventListener('change', updateUrlPlaceholder);
+            
             // 邮件发送相关事件
             emailForm.addEventListener('submit', handleEmailSubmit);
+        }
+        
+        // 更新URL输入框的占位符
+        function updateUrlPlaceholder() {
+            const siteType = siteTypeSelect.value;
+            if (siteType === 'wechat') {
+                articleUrl.placeholder = 'https://mp.weixin.qq.com/s/...';
+            } else if (siteType === 'zsxq') {
+                articleUrl.placeholder = 'https://wx.zsxq.com/group/.../topic/...';
+            } else {
+                articleUrl.placeholder = '请输入文章链接...';
+            }
         }
 
         // 处理表单提交
         async function handleSubmit(e) {
             e.preventDefault();
             
+            const siteType = siteTypeSelect.value;
             const url = articleUrl.value.trim();
+            
+            if (!siteType) {
+                showMessage('请选择网站类型', 'error');
+                return;
+            }
+            
             if (!url) {
                 showMessage('请输入文章链接', 'error');
                 return;
             }
 
-            if (!url.includes('mp.weixin.qq.com')) {
+            // 验证URL格式
+            if (siteType === 'wechat' && !url.includes('mp.weixin.qq.com')) {
                 showMessage('请输入有效的微信公众号文章链接', 'error');
+                return;
+            }
+            
+            if (siteType === 'zsxq' && !url.includes('wx.zsxq.com')) {
+                showMessage('请输入有效的知识星球文章链接', 'error');
                 return;
             }
 
