@@ -1,0 +1,12 @@
+# EdgeOne Pages 重定向规则
+# 将 article.html?id=xxx 重定向到 articles/xxx.html
+
+/article.html?id=wechat-6_WXtwXtrj_hCuEsRy52OA /articles/wechat-6_WXtwXtrj_hCuEsRy52OA.html 200
+/article.html?id=wechat-UzMV7zWxBELAS-T7mIonUA /articles/wechat-UzMV7zWxBELAS-T7mIonUA.html 200
+/article.html?id=wechat-WKfRcYuph4Yo1FkoNy_1zg /articles/wechat-WKfRcYuph4Yo1FkoNy_1zg.html 200
+/article.html?id=wechat-aIltul1-Pb8Oz7hrfWC8dA /articles/wechat-aIltul1-Pb8Oz7hrfWC8dA.html 200
+/article.html?id=wechat-rADj7tBbJtEecfs18h17BQ /articles/wechat-rADj7tBbJtEecfs18h17BQ.html 200
+/article.html?id=wechat-tV0vAj0pXv04xZkod8H7hw /articles/wechat-tV0vAj0pXv04xZkod8H7hw.html 200
+
+# 通用重定向规则（如果支持）
+/article.html?id=* /articles/:splat.html 200

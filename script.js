@@ -65,7 +65,7 @@ function createArticleCard(article) {
   
   // Use internal article page if content exists, otherwise use external link
   const hasContent = article.content && article.content.trim().length > 0;
-  const articleHref = hasContent ? `article.html?id=${encodeURIComponent(article.id)}` : article.url;
+  const articleHref = hasContent ? `articles/${encodeURIComponent(article.id)}.html` : article.url;
   const linkTarget = hasContent ? '_self' : '_blank';
   const linkRel = hasContent ? '' : 'noopener';
   
