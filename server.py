@@ -196,35 +196,64 @@ def crawl_article():
 def sync_to_git():
     """同步到Git"""
     try:
-        # 添加所有更改
-        success, stdout, stderr = run_git_command('git add .')
+        # 检查是否有未提交的更改
+        success, stdout, stderr = run_git_command('git status --porcelain')
         if not success:
             return jsonify({
                 'success': False,
-                'error': f'Git add 失败: {stderr}'
+                'error': f'检查Git状态失败: {stderr}'
             }), 500
         
-        # 提交更改
-        commit_message = f"通过管理后台添加文章 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        success, stdout, stderr = run_git_command(f'git commit -m "{commit_message}"')
+        # 如果有未提交的更改，则添加并提交
+        if stdout.strip():
+            # 添加所有更改
+            success, stdout, stderr = run_git_command('git add .')
+            if not success:
+                return jsonify({
+                    'success': False,
+                    'error': f'Git add 失败: {stderr}'
+                }), 500
+            
+            # 提交更改
+            commit_message = f"通过管理后台添加文章 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            success, stdout, stderr = run_git_command(f'git commit -m "{commit_message}"')
+            if not success:
+                return jsonify({
+                    'success': False,
+                    'error': f'Git commit 失败: {stderr}'
+                }), 500
+            
+            commit_msg = f'已提交更改: {commit_message}'
+        else:
+            commit_msg = '没有新的更改需要提交'
+        
+        # 检查是否需要推送
+        success, stdout, stderr = run_git_command('git status -sb')
         if not success:
             return jsonify({
                 'success': False,
-                'error': f'Git commit 失败: {stderr}'
+                'error': f'检查推送状态失败: {stderr}'
             }), 500
         
-        # 推送到远程仓库
-        success, stdout, stderr = run_git_command('git push origin main')
-        if not success:
-            return jsonify({
-                'success': False,
-                'error': f'Git push 失败: {stderr}'
-            }), 500
+        # 如果有未推送的提交，则推送
+        if 'ahead' in stdout:
+            success, stdout, stderr = run_git_command('git push origin main')
+            if not success:
+                return jsonify({
+                    'success': False,
+                    'error': f'Git push 失败: {stderr}'
+                }), 500
+            push_msg = '已推送到远程仓库'
+        else:
+            push_msg = '没有需要推送的提交'
         
         return jsonify({
             'success': True,
-            'message': '同步到Git成功',
-            'commit_message': commit_message
+            'message': f'Git同步完成 - {commit_msg}, {push_msg}',
+            'details': {
+                'commit': commit_msg,
+                'push': push_msg
+            }
         })
         
     except Exception as e:
