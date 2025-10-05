@@ -500,10 +500,10 @@ def create_article_pages(articles):
         
         # 使用正则表达式修复图片路径和可见性问题
         content = article['content']
-        # 修复 data-src 路径
-        content = re.sub(r'data-src="images/', 'data-src="../images/', content)
-        # 修复 src 路径
-        content = re.sub(r'src="images/', 'src="../images/', content)
+        # 修复 data-src 路径 (匹配 ./images/ 和 images/)
+        content = re.sub(r'data-src="\.?/?images/', 'data-src="../images/', content)
+        # 修复 src 路径 (匹配 ./images/ 和 images/)
+        content = re.sub(r'src="\.?/?images/', 'src="../images/', content)
         # 修复可见性问题：移除 visibility: hidden 和 opacity: 0
         content = re.sub(r'style="[^"]*visibility:\s*hidden[^"]*"', 'style=""', content)
         content = re.sub(r'style="[^"]*opacity:\s*0[^"]*"', 'style=""', content)
