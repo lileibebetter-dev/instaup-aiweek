@@ -7,17 +7,12 @@
     <meta name="description" content="白蓝色像素风设计的AI资讯周报，每周精选前沿AI技术与应用">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 像素风背景 -->
     <div class="pixel-bg"></div>
     
-    <!-- 主容器 -->
     <div class="container">
-        <!-- 像素风头部 -->
         <header class="pixel-header">
             <div class="header-content">
                 <h1 class="pixel-logo">
@@ -33,7 +28,6 @@
             </div>
         </header>
         
-        <!-- 像素风搜索栏 -->
         <div class="search-section">
             <div class="pixel-search-box">
                 <input type="text" placeholder="搜索AI资讯..." class="pixel-input">
@@ -41,10 +35,9 @@
             </div>
         </div>
         
-        <!-- 文章网格 -->
         <main class="articles-grid">
             
-        <div class="pixel-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="pixel-card">
             <div class="card-header">
                 <div class="pixel-icon">📰</div>
                 <div class="card-meta">
@@ -62,7 +55,7 @@
             </div>
         </div>
         
-        <div class="pixel-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="pixel-card">
             <div class="card-header">
                 <div class="pixel-icon">📰</div>
                 <div class="card-meta">
@@ -80,7 +73,7 @@
             </div>
         </div>
         
-        <div class="pixel-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="pixel-card">
             <div class="card-header">
                 <div class="pixel-icon">📰</div>
                 <div class="card-meta">
@@ -98,7 +91,7 @@
             </div>
         </div>
         
-        <div class="pixel-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="pixel-card">
             <div class="card-header">
                 <div class="pixel-icon">📰</div>
                 <div class="card-meta">
@@ -116,7 +109,7 @@
             </div>
         </div>
         
-        <div class="pixel-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="pixel-card">
             <div class="card-header">
                 <div class="pixel-icon">📰</div>
                 <div class="card-meta">
@@ -134,7 +127,7 @@
             </div>
         </div>
         
-        <div class="pixel-card" data-aos="fade-up" data-aos-delay="500">
+        <div class="pixel-card">
             <div class="card-header">
                 <div class="pixel-icon">📰</div>
                 <div class="card-meta">
@@ -154,7 +147,6 @@
         
         </main>
         
-        <!-- 像素风页脚 -->
         <footer class="pixel-footer">
             <div class="footer-content">
                 <p class="pixel-text">© 2024 云秒搭AI周报 - 白蓝色像素风设计</p>
@@ -167,7 +159,6 @@
         </footer>
     </div>
     
-    <!-- 像素风特效 -->
     <div class="pixel-effects">
         <div class="floating-pixel">💻</div>
         <div class="floating-pixel">🤖</div>
@@ -175,7 +166,6 @@
     </div>
     
     <script>
-        // 简单的搜索功能
         document.querySelector('.pixel-input').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.pixel-card');
@@ -192,7 +182,6 @@
             });
         });
         
-        // 像素风按钮点击效果
         document.querySelectorAll('.pixel-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.pixel-btn').forEach(b => b.classList.remove('active'));
