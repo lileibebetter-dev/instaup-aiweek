@@ -429,6 +429,10 @@
             
             <div class="operation-controls">
                 <button class="btn btn-success" id="refreshBtn">刷新文章列表</button>
+                <button class="btn btn-primary" id="buildSiteBtn">
+                    <span>🏗️</span>
+                    <span>构建网站</span>
+                </button>
                 <button class="btn" id="syncBtn">
                     <span id="syncIcon">📁</span>
                     <span id="syncText">同步到Git</span>
@@ -503,6 +507,7 @@
             articleForm.addEventListener('submit', handleSubmit);
             searchInput.addEventListener('input', filterArticles);
             refreshBtn.addEventListener('click', loadArticles);
+            buildSiteBtn.addEventListener('click', buildSite);
             syncBtn.addEventListener('click', syncToGit);
             clearCacheBtn.addEventListener('click', clearCache);
             
@@ -544,13 +549,33 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showMessage('文章抓取成功！', 'success');
+                    showMessage('文章抓取成功！正在重新构建网站...', 'success');
                     currentArticle = result.article;
                     previewBtn.style.display = 'inline-block';
                     articleForm.reset();
                     loadArticles();
-                    // 刷新Git状态
-                    setTimeout(() => checkGitStatus(), 1000);
+                    
+                    // 自动重新构建网站
+                    setTimeout(async () => {
+                        try {
+                            showMessage('正在重新构建网站...', 'info');
+                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
+                                method: 'POST'
+                            });
+                            const buildResult = await buildResponse.json();
+                            
+                            if (buildResult.success) {
+                                showMessage('网站重新构建成功！', 'success');
+                            } else {
+                                showMessage(`网站构建失败: ${buildResult.error}`, 'error');
+                            }
+                        } catch (error) {
+                            showMessage(`网站构建出错: ${error.message}`, 'error');
+                        }
+                        
+                        // 刷新Git状态
+                        checkGitStatus();
+                    }, 2000);
                 } else {
                     showMessage(`抓取失败: ${result.error}`, 'error');
                 }
@@ -647,10 +672,30 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showMessage('文章删除成功', 'success');
+                    showMessage('文章删除成功！正在重新构建网站...', 'success');
                     loadArticles();
-                    // 刷新Git状态
-                    setTimeout(() => checkGitStatus(), 1000);
+                    
+                    // 自动重新构建网站
+                    setTimeout(async () => {
+                        try {
+                            showMessage('正在重新构建网站...', 'info');
+                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
+                                method: 'POST'
+                            });
+                            const buildResult = await buildResponse.json();
+                            
+                            if (buildResult.success) {
+                                showMessage('网站重新构建成功！', 'success');
+                            } else {
+                                showMessage(`网站构建失败: ${buildResult.error}`, 'error');
+                            }
+                        } catch (error) {
+                            showMessage(`网站构建出错: ${error.message}`, 'error');
+                        }
+                        
+                        // 刷新Git状态
+                        checkGitStatus();
+                    }, 2000);
                 } else {
                     showMessage(`删除失败: ${result.error}`, 'error');
                 }
@@ -774,6 +819,31 @@
                 }, 2000);
             } finally {
                 syncBtn.disabled = false;
+            }
+        }
+
+        // 构建网站
+        async function buildSite() {
+            try {
+                buildSiteBtn.disabled = true;
+                buildSiteBtn.innerHTML = '<span>⏳</span><span>构建中...</span>';
+                
+                const response = await fetch('http://localhost:8888/api/build-site', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('网站构建成功！', 'success');
+                } else {
+                    showMessage(`构建失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`构建出错: ${error.message}`, 'error');
+            } finally {
+                buildSiteBtn.disabled = false;
+                buildSiteBtn.innerHTML = '<span>🏗️</span><span>构建网站</span>';
             }
         }
 

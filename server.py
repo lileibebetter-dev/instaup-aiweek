@@ -375,6 +375,37 @@ def send_email():
             'error': str(e)
         }), 500
 
+# 构建网站API
+@app.route('/api/build-site', methods=['POST'])
+def build_site():
+    """构建网站"""
+    try:
+        import subprocess
+        import sys
+        
+        # 运行构建脚本
+        result = subprocess.run([sys.executable, 'build.py'], 
+                              capture_output=True, text=True, cwd='.')
+        
+        if result.returncode == 0:
+            return jsonify({
+                'success': True,
+                'message': '网站构建成功',
+                'output': result.stdout
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': f'构建失败: {result.stderr}',
+                'output': result.stdout
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 # 静态文件服务
 @app.route('/<path:filename>')
 def serve_static(filename):
