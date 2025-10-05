@@ -2,14 +2,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
-    --pixel-primary: #00ff41;
-    --pixel-secondary: #008f11;
-    --pixel-accent: #ff6b35;
-    --pixel-bg: #0d1117;
-    --pixel-card: #161b22;
-    --pixel-text: #f0f6fc;
-    --pixel-muted: #8b949e;
-    --pixel-border: #30363d;
+    --pixel-primary: #2196f3;
+    --pixel-secondary: #1976d2;
+    --pixel-accent: #64b5f6;
+    --pixel-bg: #ffffff;
+    --pixel-card: #f8f9fa;
+    --pixel-text: #212529;
+    --pixel-muted: #6c757d;
+    --pixel-border: #dee2e6;
 }
 
 * {
@@ -34,8 +34,8 @@ body {
     width: 100%;
     height: 100%;
     background: 
-        linear-gradient(45deg, transparent 49%, rgba(0, 255, 65, 0.1) 50%, transparent 51%),
-        linear-gradient(-45deg, transparent 49%, rgba(0, 255, 65, 0.1) 50%, transparent 51%);
+        linear-gradient(45deg, transparent 49%, rgba(33, 150, 243, 0.1) 50%, transparent 51%),
+        linear-gradient(-45deg, transparent 49%, rgba(33, 150, 243, 0.1) 50%, transparent 51%);
     background-size: 20px 20px;
     z-index: -1;
     animation: pixelMove 20s linear infinite;
@@ -62,7 +62,7 @@ body {
     padding: 30px 0;
     border: 3px solid var(--pixel-primary);
     border-image: repeating-linear-gradient(45deg, var(--pixel-primary), var(--pixel-primary) 10px, transparent 10px, transparent 20px) 1;
-    background: rgba(0, 255, 65, 0.05);
+    background: rgba(33, 150, 243, 0.05);
 }
 
 .pixel-logo {
@@ -73,7 +73,7 @@ body {
     display: block;
     font-size: 2.5rem;
     color: var(--pixel-primary);
-    text-shadow: 3px 3px 0px var(--pixel-secondary);
+    text-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
     margin-bottom: 10px;
 }
 
@@ -114,7 +114,7 @@ body {
 
 .pixel-btn:active {
     transform: translate(0, 0);
-    box-shadow: 2px 2px 0px var(--pixel-secondary);
+    box-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
 }
 
 /* 搜索区域 */
@@ -188,7 +188,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(33, 150, 243, 0.2), transparent);
     transition: left 0.5s;
 }
 
@@ -199,7 +199,7 @@ body {
 .pixel-card:hover {
     border-color: var(--pixel-primary);
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 255, 65, 0.3);
+    box-shadow: 0 10px 25px rgba(33, 150, 243, 0.3);
 }
 
 .card-header {
@@ -246,7 +246,7 @@ body {
 
 .pixel-title a:hover {
     color: var(--pixel-primary);
-    text-shadow: 2px 2px 0px var(--pixel-secondary);
+    text-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
 }
 
 .pixel-tags {
@@ -298,7 +298,7 @@ body {
 
 .pixel-link:hover {
     color: var(--pixel-accent);
-    text-shadow: 1px 1px 0px var(--pixel-secondary);
+    text-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
 }
 
 /* 浮动像素特效 */
