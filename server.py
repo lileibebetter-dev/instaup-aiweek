@@ -151,7 +151,11 @@ def crawl_article():
             article_data['title'] = custom_title
         
         if custom_tags:
-            tags = [tag.strip() for tag in custom_tags.split(',') if tag.strip()]
+            # 如果custom_tags是字符串，则分割；如果是列表，则直接使用
+            if isinstance(custom_tags, str):
+                tags = [tag.strip() for tag in custom_tags.split(',') if tag.strip()]
+            else:
+                tags = [tag.strip() for tag in custom_tags if tag.strip()]
             if tags:
                 article_data['tags'] = tags
         
