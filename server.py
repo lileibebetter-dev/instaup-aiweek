@@ -526,9 +526,54 @@ def list_pdfs():
         
         return jsonify({'pdfs': pdfs})
         
+        except Exception as e:
+            print(f"获取PDF列表失败: {e}")
+            return jsonify({'error': '获取列表失败'}), 500
+
+@app.route('/api/generate-weekly-report', methods=['POST'])
+def generate_weekly_report():
+    """生成AI周报"""
+    try:
+        # 创建PDF处理器
+        processor = PDFProcessor()
+        
+        # 获取所有文章数据
+        articles = load_articles()
+        
+        if not articles:
+            return jsonify({
+                'success': False,
+                'error': '没有找到文章数据，无法生成周报'
+            }), 400
+        
+        # 生成周报
+        report_data, error = processor.generate_weekly_report(articles)
+        
+        if error:
+            return jsonify({
+                'success': False,
+                'error': error
+            }), 500
+        
+        # 保存周报到文章列表
+        if processor.update_articles_json(report_data):
+            return jsonify({
+                'success': True,
+                'message': 'AI周报生成成功',
+                'article': report_data
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': '保存周报失败'
+            }), 500
+            
     except Exception as e:
-        print(f"获取PDF列表失败: {e}")
-        return jsonify({'error': '获取列表失败'}), 500
+        print(f"生成周报失败: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 # 静态文件服务
 @app.route('/<path:filename>')

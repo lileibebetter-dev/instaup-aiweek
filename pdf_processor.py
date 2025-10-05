@@ -14,6 +14,7 @@ from pathlib import Path
 import PyPDF2
 import requests
 from werkzeug.utils import secure_filename
+from openai import OpenAI
 
 class PDFProcessor:
     def __init__(self):
@@ -24,6 +25,13 @@ class PDFProcessor:
         
         for dir_path in [self.upload_dir, self.pdf_dir, self.articles_dir]:
             os.makedirs(dir_path, exist_ok=True)
+        
+        # 初始化火山方舟客户端
+        self.client = OpenAI(
+            base_url="https://ark.cn-beijing.volces.com/api/v3",
+            api_key=os.environ.get("ARK_API_KEY", "86b2b17f-8b5a-4cde-ba7a-b9bd3ec93da3"),
+        )
+        self.model = "doubao-seed-1-6-thinking-250715"
     
     def allowed_file(self, filename):
         """检查文件类型是否允许"""
@@ -67,30 +75,58 @@ class PDFProcessor:
             return None, f"提取PDF文本失败: {str(e)}"
     
     def call_llm_api(self, text, title="PDF文档解读"):
-        """调用LLM API生成解读文章"""
+        """调用火山方舟LLM API生成解读文章"""
         try:
-            # 这里使用模拟的LLM调用，实际使用时需要替换为真实的LLM API
-            # 例如：OpenAI GPT、Claude、或者本地部署的大模型
+            # 构建提示词
+            prompt = f"""
+请对以下PDF文档内容进行专业解读，生成一篇结构化的解读文章。
+
+文档标题：{title}
+
+文档内容：
+{text[:8000]}  # 限制文本长度避免超出API限制
+
+请按照以下格式生成解读文章：
+
+## 📄 文档概述
+简要概述文档的主要内容和核心观点
+
+## 🔍 深度分析  
+对文档内容进行深入分析，包括：
+- 主要观点和论述
+- 支撑论据和案例
+- 逻辑结构和论证方式
+
+## 📋 核心要点
+提取文档的3-5个核心要点，每个要点用一句话概括
+
+## 💡 总结与建议
+基于文档内容，提供实用的总结和建议
+
+## 🎯 关键洞察
+从文档中提炼出的独特见解和启发
+
+请用HTML格式输出，使用合适的标签如<h2>、<p>、<ul>、<li>等。语言要专业、准确、易读。
+"""
             
-            # 模拟LLM响应
-            summary = self.generate_summary(text)
-            analysis = self.generate_analysis(text)
-            key_points = self.extract_key_points(text)
+            # 调用火山方舟API
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                max_tokens=4000,
+                temperature=0.7
+            )
             
-            content = f"""
-            <h2>📄 文档概述</h2>
-            <p>{summary}</p>
+            # 获取生成的内容
+            llm_content = response.choices[0].message.content
             
-            <h2>🔍 深度分析</h2>
-            <p>{analysis}</p>
-            
-            <h2>📋 核心要点</h2>
-            <ul>
-                {''.join([f'<li>{point}</li>' for point in key_points])}
-            </ul>
-            
-            <h2>💡 总结与建议</h2>
-            <p>本文档内容丰富，涵盖了多个重要方面。建议读者重点关注核心要点部分，并结合实际情况进行应用。</p>
+            # 添加下载链接部分
+            content = llm_content + """
             
             <div class="download-section" style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
                 <h3>📥 原始文档下载</h3>
@@ -102,7 +138,39 @@ class PDFProcessor:
             return content, None
             
         except Exception as e:
-            return None, f"LLM处理失败: {str(e)}"
+            print(f"LLM API调用失败: {e}")
+            # 如果API调用失败，使用备用方法
+            return self.generate_fallback_content(text, title)
+    
+    def generate_fallback_content(self, text, title):
+        """当LLM API失败时生成备用内容"""
+        summary = self.generate_summary(text)
+        analysis = self.generate_analysis(text)
+        key_points = self.extract_key_points(text)
+        
+        content = f"""
+        <h2>📄 文档概述</h2>
+        <p>{summary}</p>
+        
+        <h2>🔍 深度分析</h2>
+        <p>{analysis}</p>
+        
+        <h2>📋 核心要点</h2>
+        <ul>
+            {''.join([f'<li>{point}</li>' for point in key_points])}
+        </ul>
+        
+        <h2>💡 总结与建议</h2>
+        <p>本文档内容丰富，涵盖了多个重要方面。建议读者重点关注核心要点部分，并结合实际情况进行应用。</p>
+        
+        <div class="download-section" style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h3>📥 原始文档下载</h3>
+            <p>如需查看完整内容，请下载原始PDF文档：</p>
+            <a href="#" class="download-link" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">下载PDF文档</a>
+        </div>
+        """
+        
+        return content, None
     
     def generate_summary(self, text):
         """生成文档摘要"""
@@ -224,6 +292,89 @@ class PDFProcessor:
         except Exception as e:
             print(f"❌ 更新JSON文件失败: {e}")
             return False
+    
+    def generate_weekly_report(self, articles_data):
+        """生成周报"""
+        try:
+            # 构建周报提示词
+            articles_summary = []
+            for article in articles_data[:10]:  # 取最近10篇文章
+                articles_summary.append(f"""
+标题：{article.get('title', '未知标题')}
+来源：{article.get('source', '未知来源')}
+日期：{article.get('date', '未知日期')}
+摘要：{article.get('summary', '无摘要')[:200]}
+""")
+            
+            articles_text = "\n".join(articles_summary)
+            
+            prompt = f"""
+请基于以下AI相关文章内容，生成一份专业的AI周报。
+
+文章列表：
+{articles_text}
+
+请按照以下格式生成周报：
+
+# 🤖 AI周报 - {datetime.now().strftime('%Y年%m月第%U周')}
+
+## 📊 本周概览
+简要概述本周AI领域的主要动态和趋势
+
+## 🔥 热门话题
+总结本周最受关注的AI话题和讨论热点
+
+## 💡 重要突破
+列举本周AI技术的重要突破和创新
+
+## 📈 行业动态
+分析AI行业的重要动态和发展趋势
+
+## 🎯 深度解读
+选择1-2篇重要文章进行深度解读
+
+## 🔮 趋势展望
+基于本周动态，预测未来AI发展趋势
+
+## 📚 推荐阅读
+推荐本周值得深入阅读的文章
+
+请用HTML格式输出，使用合适的标签。语言要专业、客观、有洞察力。
+"""
+            
+            # 调用火山方舟API
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                max_tokens=4000,
+                temperature=0.7
+            )
+            
+            # 获取生成的内容
+            report_content = response.choices[0].message.content
+            
+            # 创建周报文章数据
+            report_data = {
+                'id': f"weekly-report-{int(time.time())}",
+                'title': f"AI周报 - {datetime.now().strftime('%Y年%m月第%U周')}",
+                'source': 'AI周报生成器',
+                'summary': '基于本周AI相关文章自动生成的周报，涵盖热门话题、重要突破和趋势分析。',
+                'url': '#',
+                'date': datetime.now().strftime('%Y-%m-%d'),
+                'tags': ['AI周报', '趋势分析', '行业动态', '自动生成'],
+                'content': report_content
+            }
+            
+            return report_data, None
+            
+        except Exception as e:
+            print(f"生成周报失败: {e}")
+            return None, f"生成周报失败: {str(e)}"
 
 def main():
     """主函数"""

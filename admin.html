@@ -458,6 +458,22 @@
                 </button>
             </form>
             
+            <!-- 周报生成 -->
+            <div class="admin-section" style="margin-top: 30px;">
+                <h2 class="section-title">📊 AI周报生成</h2>
+                <p style="color: #666; margin-bottom: 20px;">
+                    基于现有文章自动生成AI周报，包含热门话题、重要突破和趋势分析。
+                </p>
+                
+                <button type="button" class="btn btn-primary" id="generateReportBtn">
+                    <span>🤖 生成AI周报</span>
+                </button>
+                
+                <button type="button" class="btn btn-success" id="reportPreviewBtn" style="display: none;">
+                    预览周报
+                </button>
+            </div>
+            
             <div class="loading" id="loadingDiv">
                 <div class="spinner"></div>
                 <p>正在抓取文章内容，请稍候...</p>
@@ -562,6 +578,8 @@
         const pdfSubmitText = document.getElementById('pdfSubmitText');
         const previewBtn = document.getElementById('previewBtn');
         const pdfPreviewBtn = document.getElementById('pdfPreviewBtn');
+        const generateReportBtn = document.getElementById('generateReportBtn');
+        const reportPreviewBtn = document.getElementById('reportPreviewBtn');
         const loadingDiv = document.getElementById('loadingDiv');
         const statusMessage = document.getElementById('statusMessage');
         const articlesList = document.getElementById('articlesList');
@@ -611,6 +629,9 @@
             document.querySelectorAll('.type-btn').forEach(btn => {
                 btn.addEventListener('click', switchArticleType);
             });
+            
+            // 周报生成
+            generateReportBtn.addEventListener('click', generateWeeklyReport);
             
             // 邮件发送相关事件
             emailForm.addEventListener('submit', handleEmailSubmit);
@@ -709,6 +730,58 @@
                 }
             } catch (error) {
                 showMessage(`上传失败: ${error.message}`, 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        // 生成周报
+        async function generateWeeklyReport() {
+            try {
+                setLoading(true);
+                showMessage('正在生成AI周报，请稍候...', 'info');
+                
+                const response = await fetch('http://localhost:8888/api/generate-weekly-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('AI周报生成成功！正在重新构建网站...', 'success');
+                    currentArticle = result.article;
+                    reportPreviewBtn.style.display = 'inline-block';
+                    loadArticles();
+                    
+                    // 自动重新构建网站
+                    setTimeout(async () => {
+                        try {
+                            showMessage('正在重新构建网站...', 'info');
+                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
+                                method: 'POST'
+                            });
+                            const buildResult = await buildResponse.json();
+                            
+                            if (buildResult.success) {
+                                showMessage('网站重新构建成功！', 'success');
+                            } else {
+                                showMessage(`网站构建失败: ${buildResult.error}`, 'error');
+                            }
+                        } catch (error) {
+                            showMessage(`网站构建出错: ${error.message}`, 'error');
+                        }
+                        
+                        // 刷新Git状态
+                        checkGitStatus();
+                    }, 2000);
+                } else {
+                    showMessage(`周报生成失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`生成失败: ${error.message}`, 'error');
             } finally {
                 setLoading(false);
             }
