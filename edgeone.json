@@ -1,13 +1,13 @@
 {
   "name": "云秒搭AI周报",
-  "description": "像素风AI资讯平台",
+  "description": "白蓝色像素风AI资讯平台",
   "build": {
-    "command": "python3 build_simple.py",
+    "command": "",
     "output": "/"
   },
   "routes": [
     {
-      "src": "/article.html\?id=(.*)",
+      "src": "/article.html\\?id=(.*)",
       "dest": "/articles/$1.html"
     }
   ]
