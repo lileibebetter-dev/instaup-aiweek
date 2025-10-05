@@ -230,6 +230,87 @@
             color: #666;
             font-size: 0.9rem;
         }
+        
+        /* Git同步状态样式 */
+        .operation-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .sync-status {
+            margin-left: 8px;
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .sync-status.clean {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+        
+        .sync-status.changes {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .sync-status.syncing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .sync-status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .sync-status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .git-status {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            font-size: 0.9rem;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .status-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .status-value {
+            color: #6c757d;
+        }
+        
+        .status-value.clean {
+            color: #6c757d;
+        }
+        
+        .status-value.changes {
+            color: #28a745;
+        }
+        
+        .status-value.ahead {
+            color: #ffc107;
+        }
+        
+        .status-value.synced {
+            color: #28a745;
+        }
     </style>
 </head>
 <body>
@@ -346,9 +427,26 @@
         <div class="admin-section">
             <h2 class="section-title">系统操作</h2>
             
-            <button class="btn btn-success" id="refreshBtn">刷新文章列表</button>
-            <button class="btn" id="syncBtn">同步到Git</button>
-            <button class="btn btn-danger" id="clearCacheBtn">清除缓存</button>
+            <div class="operation-controls">
+                <button class="btn btn-success" id="refreshBtn">刷新文章列表</button>
+                <button class="btn" id="syncBtn">
+                    <span id="syncIcon">📁</span>
+                    <span id="syncText">同步到Git</span>
+                    <span id="syncStatus" class="sync-status"></span>
+                </button>
+                <button class="btn btn-danger" id="clearCacheBtn">清除缓存</button>
+            </div>
+            
+            <div class="git-status" id="gitStatus" style="margin-top: 15px; padding: 10px; border-radius: 8px; display: none;">
+                <div class="status-item">
+                    <span class="status-label">工作区状态:</span>
+                    <span id="workingStatus" class="status-value">检查中...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">远程状态:</span>
+                    <span id="remoteStatus" class="status-value">检查中...</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -379,6 +477,14 @@
         const emailSubject = document.getElementById('emailSubject');
         const emailContent = document.getElementById('emailContent');
         const sendEmailBtn = document.getElementById('sendEmailBtn');
+        
+        // Git同步相关元素
+        const syncIcon = document.getElementById('syncIcon');
+        const syncText = document.getElementById('syncText');
+        const syncStatus = document.getElementById('syncStatus');
+        const gitStatus = document.getElementById('gitStatus');
+        const workingStatus = document.getElementById('workingStatus');
+        const remoteStatus = document.getElementById('remoteStatus');
 
         // 统计元素
         const totalArticles = document.getElementById('totalArticles');
@@ -388,6 +494,7 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             loadArticles();
+            checkGitStatus();
             setupEventListeners();
         });
 
@@ -442,6 +549,8 @@
                     previewBtn.style.display = 'inline-block';
                     articleForm.reset();
                     loadArticles();
+                    // 刷新Git状态
+                    setTimeout(() => checkGitStatus(), 1000);
                 } else {
                     showMessage(`抓取失败: ${result.error}`, 'error');
                 }
@@ -540,6 +649,8 @@
                 if (result.success) {
                     showMessage('文章删除成功', 'success');
                     loadArticles();
+                    // 刷新Git状态
+                    setTimeout(() => checkGitStatus(), 1000);
                 } else {
                     showMessage(`删除失败: ${result.error}`, 'error');
                 }
@@ -548,11 +659,70 @@
             }
         }
 
+        // 检查Git状态
+        async function checkGitStatus() {
+            try {
+                const response = await fetch('http://localhost:8888/api/git-status');
+                const result = await response.json();
+                
+                if (result.success) {
+                    updateSyncButtonStatus(result.status);
+                    updateGitStatusDisplay(result.status);
+                    gitStatus.style.display = 'block';
+                } else {
+                    console.error('检查Git状态失败:', result.error);
+                }
+            } catch (error) {
+                console.error('检查Git状态失败:', error);
+            }
+        }
+        
+        // 更新同步按钮状态
+        function updateSyncButtonStatus(status) {
+            syncStatus.className = 'sync-status';
+            
+            if (status.has_changes || status.needs_push) {
+                syncStatus.classList.add('changes');
+                syncStatus.textContent = '有更改';
+                syncBtn.disabled = false;
+                syncBtn.style.background = '#28a745';
+            } else {
+                syncStatus.classList.add('clean');
+                syncStatus.textContent = '已同步';
+                syncBtn.disabled = false;
+                syncBtn.style.background = '#6c757d';
+            }
+        }
+        
+        // 更新Git状态显示
+        function updateGitStatusDisplay(status) {
+            // 工作区状态
+            if (status.has_changes) {
+                workingStatus.textContent = '有未提交的更改';
+                workingStatus.className = 'status-value changes';
+            } else {
+                workingStatus.textContent = '工作区干净';
+                workingStatus.className = 'status-value clean';
+            }
+            
+            // 远程状态
+            if (status.needs_push) {
+                remoteStatus.textContent = '有未推送的提交';
+                remoteStatus.className = 'status-value ahead';
+            } else {
+                remoteStatus.textContent = '已同步到远程';
+                remoteStatus.className = 'status-value synced';
+            }
+        }
+        
         // 同步到Git
         async function syncToGit() {
             try {
-                setLoading(true);
-                showMessage('正在同步到Git...', 'info');
+                // 更新按钮状态为同步中
+                syncStatus.className = 'sync-status syncing';
+                syncStatus.textContent = '同步中...';
+                syncBtn.disabled = true;
+                syncIcon.textContent = '⏳';
 
                 const response = await fetch('http://localhost:8888/api/sync', {
                     method: 'POST'
@@ -561,14 +731,49 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showMessage('同步成功！', 'success');
+                    // 成功状态
+                    syncStatus.className = 'sync-status success';
+                    syncStatus.textContent = '同步成功';
+                    syncIcon.textContent = '✅';
+                    
+                    // 显示成功弹框
+                    alert(`🎉 Git同步成功！\n\n${result.message}`);
+                    
+                    // 刷新Git状态
+                    setTimeout(() => {
+                        checkGitStatus();
+                        syncIcon.textContent = '📁';
+                    }, 2000);
+                    
                 } else {
+                    // 错误状态
+                    syncStatus.className = 'sync-status error';
+                    syncStatus.textContent = '同步失败';
+                    syncIcon.textContent = '❌';
+                    
                     showMessage(`同步失败: ${result.error}`, 'error');
+                    
+                    // 恢复按钮状态
+                    setTimeout(() => {
+                        checkGitStatus();
+                        syncIcon.textContent = '📁';
+                    }, 2000);
                 }
             } catch (error) {
+                // 网络错误状态
+                syncStatus.className = 'sync-status error';
+                syncStatus.textContent = '网络错误';
+                syncIcon.textContent = '❌';
+                
                 showMessage(`同步失败: ${error.message}`, 'error');
+                
+                // 恢复按钮状态
+                setTimeout(() => {
+                    checkGitStatus();
+                    syncIcon.textContent = '📁';
+                }, 2000);
             } finally {
-                setLoading(false);
+                syncBtn.disabled = false;
             }
         }
 

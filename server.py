@@ -192,6 +192,34 @@ def crawl_article():
             'error': str(e)
         }), 500
 
+@app.route('/api/git-status', methods=['GET'])
+def get_git_status():
+    """获取Git状态"""
+    try:
+        # 检查是否有未提交的更改
+        success, stdout, stderr = run_git_command('git status --porcelain')
+        has_changes = bool(stdout.strip()) if success else False
+        
+        # 检查是否需要推送
+        success, stdout, stderr = run_git_command('git status -sb')
+        needs_push = 'ahead' in stdout if success else False
+        
+        return jsonify({
+            'success': True,
+            'status': {
+                'has_changes': has_changes,
+                'needs_push': needs_push,
+                'working_tree_clean': not has_changes,
+                'up_to_date': not needs_push
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/sync', methods=['POST'])
 def sync_to_git():
     """同步到Git"""
