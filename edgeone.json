@@ -2,7 +2,7 @@
   "name": "云秒搭AI周报",
   "description": "像素风AI资讯平台",
   "build": {
-    "command": "python3 rebuild_site.py",
+    "command": "python3 build_edgeone.py",
     "output": "/"
   },
   "routes": [

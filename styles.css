@@ -1,4 +1,4 @@
-/* 像素风AI周报样式 */
+/* 白蓝色像素风AI周报样式 */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
@@ -73,7 +73,7 @@ body {
     display: block;
     font-size: 2.5rem;
     color: var(--pixel-primary);
-    text-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
+    text-shadow: 2px 2px 0px var(--pixel-secondary);
     margin-bottom: 10px;
 }
 
@@ -106,7 +106,7 @@ body {
 .pixel-btn:hover,
 .pixel-btn.active {
     background: var(--pixel-primary);
-    color: var(--pixel-bg);
+    color: white;
     border-color: var(--pixel-primary);
     transform: translate(-2px, -2px);
     box-shadow: 4px 4px 0px var(--pixel-secondary);
@@ -114,7 +114,7 @@ body {
 
 .pixel-btn:active {
     transform: translate(0, 0);
-    box-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
+    box-shadow: 2px 2px 0px var(--pixel-secondary);
 }
 
 /* 搜索区域 */
@@ -161,7 +161,7 @@ body {
 
 .pixel-search-btn:hover {
     transform: translate(-1px, -1px);
-    box-shadow: 2px 2px 0px #cc5529;
+    box-shadow: 2px 2px 0px #1976d2;
 }
 
 /* 文章网格 */
@@ -217,7 +217,7 @@ body {
     align-items: center;
     justify-content: center;
     background: var(--pixel-primary);
-    color: var(--pixel-bg);
+    color: white;
     border: 2px solid var(--pixel-primary);
 }
 
@@ -246,7 +246,7 @@ body {
 
 .pixel-title a:hover {
     color: var(--pixel-primary);
-    text-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
+    text-shadow: 2px 2px 0px var(--pixel-secondary);
 }
 
 .pixel-tags {
@@ -257,7 +257,7 @@ body {
 
 .pixel-tag {
     background: var(--pixel-secondary);
-    color: var(--pixel-bg);
+    color: white;
     padding: 5px 10px;
     font-size: 0.5rem;
     border: 1px solid var(--pixel-secondary);
@@ -298,7 +298,7 @@ body {
 
 .pixel-link:hover {
     color: var(--pixel-accent);
-    text-shadow: 1px 1px 2px rgba(33, 150, 243, 0.3);
+    text-shadow: 1px 1px 0px var(--pixel-secondary);
 }
 
 /* 浮动像素特效 */
