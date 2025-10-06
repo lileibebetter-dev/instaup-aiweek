@@ -356,6 +356,243 @@
         .status-value.synced {
             color: #28a745;
         }
+        
+        /* 分类标签样式 */
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .category-tag.ai-tech {
+            background: #007bff;
+        }
+        
+        .category-tag.ai-report {
+            background: #28a745;
+        }
+        
+        .category-tag.pdf-analysis {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .category-tag.wechat {
+            background: #6f42c1;
+        }
+        
+        .category-tag.default {
+            background: #6c757d;
+        }
+        
+        /* 文章项增强样式 */
+        .article-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: background-color 0.2s;
+        }
+        
+        .article-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .article-item:last-child {
+            border-bottom: none;
+        }
+        
+        .article-info {
+            flex: 1;
+        }
+        
+        .article-info h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .close {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .category-section {
+            margin-bottom: 25px;
+        }
+
+        .category-section h4 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .category-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: #f9f9f9;
+            transition: all 0.2s;
+        }
+
+        .category-option:hover {
+            border-color: #007bff;
+            background: #f0f8ff;
+        }
+
+        .category-option input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .category-option input[type="checkbox"]:checked + .category-label {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .category-option:has(input[type="checkbox"]:checked) {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .category-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .custom-tags {
+            margin-top: 10px;
+        }
+
+        .custom-tags input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .custom-tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .custom-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .custom-tag .remove {
+            cursor: pointer;
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        #modalArticleInfo {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        #modalArticleInfo h5 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        #modalArticleInfo p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -446,7 +683,7 @@
                 <div class="form-group">
                     <label for="pdfTags" class="form-label">自定义标签（可选）</label>
                     <input type="text" id="pdfTags" class="form-input" 
-                           placeholder="用逗号分隔，如：PDF解读,文档分析,AI解读">
+                           placeholder="用逗号分隔，如：AI技术篇章,PDF解读,文档分析">
                 </div>
                 
                 <button type="submit" class="btn" id="pdfSubmitBtn">
@@ -482,11 +719,61 @@
 
         <!-- 文章列表 -->
         <div class="admin-section">
-            <h2 class="section-title">文章列表</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="section-title" style="margin: 0;">文章列表</h2>
+                <button class="btn btn-warning" id="orphanedFilesBtn" style="margin-left: 20px;">
+                    <span>🧹</span>
+                    <span>管理未上架文件</span>
+                </button>
+            </div>
             
+            <!-- 分类统计 -->
             <div class="form-group">
-                <input type="text" id="searchInput" class="form-input" 
-                       placeholder="搜索文章标题或来源...">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <div class="stat-card" style="min-width: 120px;">
+                        <div class="stat-number" id="aiTechCount">-</div>
+                        <div class="stat-label">AI技术篇章</div>
+                    </div>
+                    <div class="stat-card" style="min-width: 120px;">
+                        <div class="stat-number" id="aiReportCount">-</div>
+                        <div class="stat-label">AI周报</div>
+                    </div>
+                    <div class="stat-card" style="min-width: 120px;">
+                        <div class="stat-number" id="pdfCount">-</div>
+                        <div class="stat-label">PDF解读</div>
+                    </div>
+                    <div class="stat-card" style="min-width: 120px;">
+                        <div class="stat-number" id="wechatCount">-</div>
+                        <div class="stat-label">微信公众号</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 筛选器 -->
+            <div class="form-group">
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <input type="text" id="searchInput" class="form-input" 
+                               placeholder="搜索文章标题或来源...">
+                    </div>
+                    <div style="min-width: 200px;">
+                        <select id="categoryFilter" class="form-input">
+                            <option value="">所有分类</option>
+                            <option value="AI技术篇章">AI技术篇章</option>
+                            <option value="AI周报">AI周报</option>
+                            <option value="PDF解读">PDF解读</option>
+                            <option value="微信公众号">微信公众号</option>
+                        </select>
+                    </div>
+                    <div style="min-width: 150px;">
+                        <select id="sourceFilter" class="form-input">
+                            <option value="">所有来源</option>
+                            <option value="微信公众号">微信公众号</option>
+                            <option value="PDF文档解读">PDF文档解读</option>
+                            <option value="AI周报生成器">AI周报生成器</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             
             <div class="articles-list" id="articlesList">
@@ -558,17 +845,118 @@
         </div>
     </div>
 
+    <!-- 文章编辑模态框 -->
+    <div id="editArticleModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑文章</h3>
+                <span class="close" onclick="closeEditArticleModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="editArticleInfo"></div>
+                <div class="form-group">
+                    <label for="editArticleTitle" class="form-label">文章标题</label>
+                    <input type="text" id="editArticleTitle" class="form-input" placeholder="请输入文章标题">
+                </div>
+                <div class="form-group">
+                    <label for="editArticleSource" class="form-label">来源</label>
+                    <input type="text" id="editArticleSource" class="form-input" placeholder="请输入来源">
+                </div>
+                <div class="form-group">
+                    <label for="editArticleSummary" class="form-label">摘要</label>
+                    <textarea id="editArticleSummary" class="form-input" rows="4" placeholder="请输入文章摘要"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editArticleUrl" class="form-label">文章链接</label>
+                    <input type="url" id="editArticleUrl" class="form-input" placeholder="请输入文章链接">
+                </div>
+                <div class="form-group">
+                    <label for="editArticleDate" class="form-label">发布日期</label>
+                    <input type="date" id="editArticleDate" class="form-input">
+                </div>
+                
+                <!-- 分类编辑部分 -->
+                <div class="category-section">
+                    <h4>主要分类</h4>
+                    <div class="category-options">
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-cat-ai-tech" value="AI技术篇章">
+                            <span class="category-label">AI技术篇章</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-cat-weekly" value="AI周报">
+                            <span class="category-label">AI周报</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-cat-pdf" value="PDF解读">
+                            <span class="category-label">PDF解读</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-cat-wechat" value="微信公众号">
+                            <span class="category-label">微信公众号</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="category-section">
+                    <h4>技术标签</h4>
+                    <div class="category-options">
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-tag-agent" value="agent">
+                            <span class="category-label">Agent</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-tag-llm" value="llm">
+                            <span class="category-label">LLM</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-tag-design" value="产品设计">
+                            <span class="category-label">产品设计</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-tag-tech" value="技术">
+                            <span class="category-label">技术</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-tag-image" value="图像生成">
+                            <span class="category-label">图像生成</span>
+                        </label>
+                        <label class="category-option">
+                            <input type="checkbox" id="edit-tag-paper" value="论文">
+                            <span class="category-label">论文</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="category-section">
+                    <h4>其他标签</h4>
+                    <div class="custom-tags">
+                        <input type="text" id="editCustomTagInput" placeholder="输入自定义标签，按回车添加">
+                        <div id="editCustomTagsList" class="custom-tags-list"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeEditArticleModal()">取消</button>
+                <button class="btn btn-primary" onclick="saveArticleEdit()">保存</button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         // 全局变量
         let articles = [];
         let currentArticle = null;
+        let currentEditingArticle = null;
+        let customTags = [];
 
         // DOM 元素
         const articleForm = document.getElementById('articleForm');
         const pdfForm = document.getElementById('pdfForm');
         const articleUrl = document.getElementById('articleUrl');
         const customTitle = document.getElementById('customTitle');
-        const customTags = document.getElementById('customTags');
+        const customTagsInput = document.getElementById('customTags');
         const pdfFile = document.getElementById('pdfFile');
         const pdfTitle = document.getElementById('pdfTitle');
         const pdfTags = document.getElementById('pdfTags');
@@ -584,6 +972,8 @@
         const statusMessage = document.getElementById('statusMessage');
         const articlesList = document.getElementById('articlesList');
         const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sourceFilter = document.getElementById('sourceFilter');
         const refreshBtn = document.getElementById('refreshBtn');
         const syncBtn = document.getElementById('syncBtn');
         const clearCacheBtn = document.getElementById('clearCacheBtn');
@@ -607,12 +997,224 @@
         const totalArticles = document.getElementById('totalArticles');
         const todayArticles = document.getElementById('todayArticles');
         const totalImages = document.getElementById('totalImages');
+        
+        // 分类统计元素
+        const aiTechCount = document.getElementById('aiTechCount');
+        const aiReportCount = document.getElementById('aiReportCount');
+        const pdfCount = document.getElementById('pdfCount');
+        const wechatCount = document.getElementById('wechatCount');
+
+        // 编辑文章
+        function editArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+            
+            currentEditingArticle = article;
+            
+            // 显示文章信息
+            document.getElementById('editArticleInfo').innerHTML = `
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                    <h5 style="margin: 0 0 5px 0; color: #333;">编辑文章</h5>
+                    <p style="margin: 0; color: #666; font-size: 0.9rem;">文章ID: ${article.id}</p>
+                </div>
+            `;
+            
+            // 填充表单数据
+            document.getElementById('editArticleTitle').value = article.title || '';
+            document.getElementById('editArticleSource').value = article.source || '';
+            document.getElementById('editArticleSummary').value = article.summary || '';
+            document.getElementById('editArticleUrl').value = article.url || '';
+            document.getElementById('editArticleDate').value = article.date || '';
+            
+            // 重置所有复选框
+            document.querySelectorAll('#editArticleModal input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
+            // 根据文章现有标签设置复选框
+            article.tags.forEach(tag => {
+                const checkbox = document.querySelector(`#editArticleModal input[value="${tag}"]`);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            });
+            
+            // 设置自定义标签
+            customTags = article.tags.filter(tag => 
+                !['AI技术篇章', 'AI周报', 'PDF解读', '微信公众号', 'agent', 'llm', '产品设计', '技术', '图像生成', '论文'].includes(tag)
+            );
+            updateEditCustomTagsDisplay();
+            
+            // 显示模态框
+            document.getElementById('editArticleModal').style.display = 'flex';
+        }
+
+        // 关闭文章编辑模态框
+        function closeEditArticleModal() {
+            document.getElementById('editArticleModal').style.display = 'none';
+            currentEditingArticle = null;
+            customTags = [];
+            document.getElementById('editCustomTagInput').value = '';
+        }
+
+        // 保存文章编辑
+        async function saveArticleEdit() {
+            if (!currentEditingArticle) return;
+            
+            const title = document.getElementById('editArticleTitle').value.trim();
+            const source = document.getElementById('editArticleSource').value.trim();
+            const summary = document.getElementById('editArticleSummary').value.trim();
+            const url = document.getElementById('editArticleUrl').value.trim();
+            const date = document.getElementById('editArticleDate').value;
+            
+            if (!title) {
+                alert('请输入文章标题');
+                return;
+            }
+            
+            // 收集选中的标签
+            const selectedTags = [];
+            
+            // 主要分类
+            document.querySelectorAll('#editArticleModal .category-section:first-child input[type="checkbox"]:checked').forEach(cb => {
+                selectedTags.push(cb.value);
+            });
+            
+            // 技术标签
+            document.querySelectorAll('#editArticleModal .category-section:nth-child(2) input[type="checkbox"]:checked').forEach(cb => {
+                selectedTags.push(cb.value);
+            });
+            
+            // 添加自定义标签
+            selectedTags.push(...customTags);
+            
+            try {
+                // 先更新文章基本信息
+                const response = await fetch('/api/articles/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: currentEditingArticle.id,
+                        title: title,
+                        source: source,
+                        summary: summary,
+                        url: url,
+                        date: date
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('更新文章基本信息失败');
+                }
+                
+                // 再更新分类
+                const categoryResponse = await fetch('/api/articles/update-categories', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: currentEditingArticle.id,
+                        tags: selectedTags
+                    })
+                });
+                
+                if (!categoryResponse.ok) {
+                    throw new Error('更新文章分类失败');
+                }
+                
+                // 更新本地数据
+                currentEditingArticle.title = title;
+                currentEditingArticle.source = source;
+                currentEditingArticle.summary = summary;
+                currentEditingArticle.url = url;
+                currentEditingArticle.date = date;
+                currentEditingArticle.tags = selectedTags;
+                
+                // 刷新文章列表
+                renderArticles();
+                updateStats();
+                
+                // 关闭模态框
+                closeEditArticleModal();
+                
+                alert('文章更新成功！');
+            } catch (error) {
+                console.error('更新文章失败:', error);
+                alert('更新文章失败，请重试');
+            }
+        }
+
+
+        // 更新自定义标签显示
+        function updateCustomTagsDisplay() {
+            const container = document.getElementById('customTagsList');
+            container.innerHTML = customTags.map(tag => `
+                <div class="custom-tag">
+                    ${tag}
+                    <span class="remove" onclick="removeCustomTag('${tag}')">&times;</span>
+                </div>
+            `).join('');
+        }
+
+        // 更新编辑模态框的自定义标签显示
+        function updateEditCustomTagsDisplay() {
+            const container = document.getElementById('editCustomTagsList');
+            container.innerHTML = customTags.map(tag => `
+                <div class="custom-tag">
+                    ${tag}
+                    <span class="remove" onclick="removeCustomTag('${tag}')">&times;</span>
+                </div>
+            `).join('');
+        }
+
+        // 移除自定义标签
+        function removeCustomTag(tag) {
+            customTags = customTags.filter(t => t !== tag);
+            updateCustomTagsDisplay();
+            updateEditCustomTagsDisplay();
+        }
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             loadArticles();
+            updateStats();
             checkGitStatus();
             setupEventListeners();
+            
+            // 设置自定义标签输入事件
+            const customTagInput = document.getElementById('customTagInput');
+            if (customTagInput) {
+                customTagInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const tag = this.value.trim();
+                        if (tag && !customTags.includes(tag)) {
+                            customTags.push(tag);
+                            updateCustomTagsDisplay();
+                            this.value = '';
+                        }
+                    }
+                });
+            }
+            
+            // 设置编辑模态框的自定义标签输入事件
+            const editCustomTagInput = document.getElementById('editCustomTagInput');
+            if (editCustomTagInput) {
+                editCustomTagInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const tag = this.value.trim();
+                        if (tag && !customTags.includes(tag)) {
+                            customTags.push(tag);
+                            updateEditCustomTagsDisplay();
+                            this.value = '';
+                        }
+                    }
+                });
+            }
         });
 
         // 设置事件监听器
@@ -620,8 +1222,11 @@
             articleForm.addEventListener('submit', handleSubmit);
             pdfForm.addEventListener('submit', handlePdfSubmit);
             searchInput.addEventListener('input', filterArticles);
+            categoryFilter.addEventListener('change', filterArticles);
+            sourceFilter.addEventListener('change', filterArticles);
             refreshBtn.addEventListener('click', loadArticles);
             buildSiteBtn.addEventListener('click', buildSite);
+            orphanedFilesBtn.addEventListener('click', manageOrphanedFiles);
             syncBtn.addEventListener('click', syncToGit);
             clearCacheBtn.addEventListener('click', clearCache);
             
@@ -690,7 +1295,7 @@
                 formData.append('customTitle', pdfTitle.value.trim() || '');
                 formData.append('customTags', pdfTags.value.trim() || '');
                 
-                const response = await fetch('http://localhost:8888/api/upload-pdf', {
+                const response = await fetch('/api/upload-pdf', {
                     method: 'POST',
                     body: formData
                 });
@@ -708,7 +1313,7 @@
                     setTimeout(async () => {
                         try {
                             showMessage('正在重新构建网站...', 'info');
-                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
+                            const buildResponse = await fetch('/api/build-site', {
                                 method: 'POST'
                             });
                             const buildResult = await buildResponse.json();
@@ -741,7 +1346,8 @@
                 setLoading(true);
                 showMessage('正在生成AI周报，请稍候...', 'info');
                 
-                const response = await fetch('http://localhost:8888/api/generate-weekly-report', {
+                // 启动周报生成任务
+                const response = await fetch('/api/generate-weekly-report', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -751,40 +1357,119 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showMessage('AI周报生成成功！正在重新构建网站...', 'success');
-                    currentArticle = result.article;
-                    reportPreviewBtn.style.display = 'inline-block';
-                    loadArticles();
-                    
-                    // 自动重新构建网站
-                    setTimeout(async () => {
-                        try {
-                            showMessage('正在重新构建网站...', 'info');
-                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
-                                method: 'POST'
-                            });
-                            const buildResult = await buildResponse.json();
-                            
-                            if (buildResult.success) {
-                                showMessage('网站重新构建成功！', 'success');
-                            } else {
-                                showMessage(`网站构建失败: ${buildResult.error}`, 'error');
-                            }
-                        } catch (error) {
-                            showMessage(`网站构建出错: ${error.message}`, 'error');
-                        }
-                        
-                        // 刷新Git状态
-                        checkGitStatus();
-                    }, 2000);
+                    // 如果返回了任务ID，开始轮询进度
+                    if (result.task_id) {
+                        pollReportProgress(result.task_id);
+                    } else {
+                        // 兼容旧版本，直接处理结果
+                        handleReportSuccess(result);
+                    }
                 } else {
                     showMessage(`周报生成失败: ${result.error}`, 'error');
+                    setLoading(false);
                 }
             } catch (error) {
                 showMessage(`生成失败: ${error.message}`, 'error');
-            } finally {
                 setLoading(false);
             }
+        }
+        
+        // 轮询周报生成进度
+        async function pollReportProgress(taskId) {
+            const maxAttempts = 60; // 最多轮询60次（5分钟）
+            let attempts = 0;
+            
+            const pollInterval = setInterval(async () => {
+                attempts++;
+                
+                try {
+                    const response = await fetch(`/api/report-progress/${taskId}`);
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const progress = result.progress;
+                        
+                        // 更新进度显示
+                        updateProgressDisplay(progress);
+                        
+                        if (progress.status === 'completed') {
+                            clearInterval(pollInterval);
+                            handleReportSuccess(result);
+                        } else if (progress.status === 'failed') {
+                            clearInterval(pollInterval);
+                            showMessage(`周报生成失败: ${progress.error || '未知错误'}`, 'error');
+                            setLoading(false);
+                        } else if (attempts >= maxAttempts) {
+                            clearInterval(pollInterval);
+                            showMessage('周报生成超时，请重试', 'error');
+                            setLoading(false);
+                        }
+                    } else {
+                        console.error('获取进度失败:', result.error);
+                    }
+                } catch (error) {
+                    console.error('轮询进度出错:', error);
+                    if (attempts >= maxAttempts) {
+                        clearInterval(pollInterval);
+                        showMessage('获取进度失败，请重试', 'error');
+                        setLoading(false);
+                    }
+                }
+            }, 5000); // 每5秒轮询一次
+        }
+        
+        // 更新进度显示
+        function updateProgressDisplay(progress) {
+            const statusMessage = document.getElementById('statusMessage');
+            const progressHtml = `
+                <div class="status-message status-info">
+                    <div style="margin-bottom: 10px;">
+                        <strong>🤖 AI周报生成中...</strong>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <div style="background: #e9ecef; border-radius: 4px; height: 20px; overflow: hidden;">
+                            <div style="background: #007bff; height: 100%; width: ${progress.percentage || 0}%; transition: width 0.3s ease;"></div>
+                        </div>
+                        <div style="text-align: center; margin-top: 5px; font-size: 0.9rem;">
+                            ${progress.percentage || 0}% - ${progress.message || '处理中...'}
+                        </div>
+                    </div>
+                    ${progress.details ? `<div style="font-size: 0.8rem; color: #6c757d;">${progress.details}</div>` : ''}
+                </div>
+            `;
+            statusMessage.innerHTML = progressHtml;
+        }
+        
+        // 处理周报生成成功
+        function handleReportSuccess(result) {
+            showMessage('AI周报生成成功！正在重新构建网站...', 'success');
+            currentArticle = result.article;
+            reportPreviewBtn.style.display = 'inline-block';
+            loadArticles();
+            
+            // 自动重新构建网站
+            setTimeout(async () => {
+                try {
+                    showMessage('正在重新构建网站...', 'info');
+                    const buildResponse = await fetch('/api/build-site', {
+                        method: 'POST'
+                    });
+                    const buildResult = await buildResponse.json();
+                    
+                    if (buildResult.success) {
+                        showMessage('网站重新构建成功！', 'success');
+                    } else {
+                        showMessage(`网站构建失败: ${buildResult.error}`, 'error');
+                    }
+                } catch (error) {
+                    showMessage(`网站构建出错: ${error.message}`, 'error');
+                }
+                
+                // 刷新Git状态
+                checkGitStatus();
+            }, 2000);
+            
+            setLoading(false);
         }
 
         // 处理表单提交
@@ -806,7 +1491,7 @@
                 setLoading(true);
                 showMessage('开始抓取文章，请稍候...', 'info');
 
-                const response = await fetch('http://localhost:8888/api/crawl', {
+                const response = await fetch('/api/crawl', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -814,7 +1499,7 @@
                     body: JSON.stringify({
                         url: url,
                         customTitle: customTitle.value.trim() || null,
-                        customTags: customTags.value.trim() || null
+                        customTags: customTagsInput.value.trim() || null
                     })
                 });
 
@@ -831,7 +1516,7 @@
                     setTimeout(async () => {
                         try {
                             showMessage('正在重新构建网站...', 'info');
-                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
+                            const buildResponse = await fetch('/api/build-site', {
                                 method: 'POST'
                             });
                             const buildResult = await buildResponse.json();
@@ -861,7 +1546,7 @@
         // 加载文章列表
         async function loadArticles() {
             try {
-                const response = await fetch('http://localhost:8888/api/articles');
+                const response = await fetch('/api/articles');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -876,6 +1561,19 @@
             }
         }
 
+        // 生成分类标签HTML
+        function generateCategoryTags(tags) {
+            return tags.map(tag => {
+                let className = 'default';
+                if (tag.includes('AI技术篇章')) className = 'ai-tech';
+                else if (tag.includes('AI周报')) className = 'ai-report';
+                else if (tag.includes('PDF解读')) className = 'pdf-analysis';
+                else if (tag.includes('微信公众号')) className = 'wechat';
+                
+                return `<span class="category-tag ${className}">${tag}</span>`;
+            }).join('');
+        }
+
         // 渲染文章列表
         function renderArticles() {
             if (articles.length === 0) {
@@ -888,11 +1586,15 @@
                     <div class="article-info">
                         <h4>${article.title}</h4>
                         <div class="article-meta">
-                            来源: ${article.source} | 日期: ${article.date} | 标签: ${article.tags.join(', ')}
+                            来源: ${article.source} | 日期: ${article.date}
+                        </div>
+                        <div class="category-tags">
+                            ${generateCategoryTags(article.tags)}
                         </div>
                     </div>
                     <div class="article-actions">
                         <button class="btn" onclick="viewArticle('${article.id}')">查看</button>
+                        <button class="btn btn-primary" onclick="editArticle('${article.id}')">编辑</button>
                         <button class="btn btn-danger" onclick="deleteArticle('${article.id}')">删除</button>
                     </div>
                 </div>
@@ -904,21 +1606,41 @@
         // 过滤文章
         function filterArticles() {
             const query = searchInput.value.toLowerCase();
-            const filteredArticles = articles.filter(article => 
-                article.title.toLowerCase().includes(query) ||
-                article.source.toLowerCase().includes(query)
-            );
+            const selectedCategory = categoryFilter.value;
+            const selectedSource = sourceFilter.value;
+            
+            const filteredArticles = articles.filter(article => {
+                // 文本搜索
+                const matchesSearch = !query || 
+                    article.title.toLowerCase().includes(query) ||
+                    article.source.toLowerCase().includes(query) ||
+                    article.tags.some(tag => tag.toLowerCase().includes(query));
+                
+                // 分类筛选
+                const matchesCategory = !selectedCategory || 
+                    article.tags.includes(selectedCategory);
+                
+                // 来源筛选
+                const matchesSource = !selectedSource || 
+                    article.source === selectedSource;
+                
+                return matchesSearch && matchesCategory && matchesSource;
+            });
             
             const html = filteredArticles.map(article => `
                 <div class="article-item">
                     <div class="article-info">
                         <h4>${article.title}</h4>
                         <div class="article-meta">
-                            来源: ${article.source} | 日期: ${article.date} | 标签: ${article.tags.join(', ')}
+                            来源: ${article.source} | 日期: ${article.date}
+                        </div>
+                        <div class="category-tags">
+                            ${generateCategoryTags(article.tags)}
                         </div>
                     </div>
                     <div class="article-actions">
                         <button class="btn" onclick="viewArticle('${article.id}')">查看</button>
+                        <button class="btn btn-primary" onclick="editArticle('${article.id}')">编辑</button>
                         <button class="btn btn-danger" onclick="deleteArticle('${article.id}')">删除</button>
                     </div>
                 </div>
@@ -937,7 +1659,7 @@
             if (!confirm('确定要删除这篇文章吗？')) return;
 
             try {
-                const response = await fetch(`http://localhost:8888/api/articles/${articleId}`, {
+                const response = await fetch(`/api/articles/${articleId}`, {
                     method: 'DELETE'
                 });
 
@@ -951,7 +1673,7 @@
                     setTimeout(async () => {
                         try {
                             showMessage('正在重新构建网站...', 'info');
-                            const buildResponse = await fetch('http://localhost:8888/api/build-site', {
+                            const buildResponse = await fetch('/api/build-site', {
                                 method: 'POST'
                             });
                             const buildResult = await buildResponse.json();
@@ -967,6 +1689,11 @@
                         
                         // 刷新Git状态
                         checkGitStatus();
+                        
+                        // 自动检查未上架文件
+                        setTimeout(() => {
+                            checkOrphanedFilesAfterDelete();
+                        }, 1000);
                     }, 2000);
                 } else {
                     showMessage(`删除失败: ${result.error}`, 'error');
@@ -979,7 +1706,7 @@
         // 检查Git状态
         async function checkGitStatus() {
             try {
-                const response = await fetch('http://localhost:8888/api/git-status');
+                const response = await fetch('/api/git-status');
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1041,7 +1768,7 @@
                 syncBtn.disabled = true;
                 syncIcon.textContent = '⏳';
 
-                const response = await fetch('http://localhost:8888/api/sync', {
+                const response = await fetch('/api/sync', {
                     method: 'POST'
                 });
 
@@ -1100,7 +1827,7 @@
                 buildSiteBtn.disabled = true;
                 buildSiteBtn.innerHTML = '<span>⏳</span><span>构建中...</span>';
                 
-                const response = await fetch('http://localhost:8888/api/build-site', {
+                const response = await fetch('/api/build-site', {
                     method: 'POST'
                 });
                 
@@ -1119,12 +1846,263 @@
             }
         }
 
+        // 删除文章后自动检查未上架文件
+        async function checkOrphanedFilesAfterDelete() {
+            try {
+                const response = await fetch('/api/check-orphaned-files');
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.count > 0) {
+                        showMessage(`检测到 ${result.count} 个未上架文件，点击"管理未上架文件"查看详情`, 'warning');
+                    } else {
+                        showMessage('没有发现未上架文件', 'info');
+                    }
+                } else {
+                    console.log('检查未上架文件失败:', result.error);
+                }
+            } catch (error) {
+                console.log('检查未上架文件出错:', error.message);
+            }
+        }
+
+        // 管理未上架文件（查看和清理）
+        async function manageOrphanedFiles() {
+            try {
+                orphanedFilesBtn.disabled = true;
+                orphanedFilesBtn.innerHTML = '<span>⏳</span><span>检查中...</span>';
+                
+                const response = await fetch('/api/check-orphaned-files');
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.count > 0) {
+                        // 显示未上架文件列表
+                        showOrphanedFilesModal(result.orphaned_files);
+                    } else {
+                        showMessage('没有发现未上架的文件！', 'info');
+                    }
+                } else {
+                    showMessage(`检查失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`检查出错: ${error.message}`, 'error');
+            } finally {
+                orphanedFilesBtn.disabled = false;
+                orphanedFilesBtn.innerHTML = '<span>🧹</span><span>管理未上架文件</span>';
+            }
+        }
+
+        // 显示未上架文件模态框
+        function showOrphanedFilesModal(orphanedFiles) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'flex';
+            
+            const totalSize = orphanedFiles.reduce((sum, file) => sum + file.size, 0);
+            const sizeText = formatFileSize(totalSize);
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 800px; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h3>未上架文件列表</h3>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin-bottom: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px;">
+                            <strong>发现 ${orphanedFiles.length} 个未上架文件，总大小: ${sizeText}</strong>
+                            <p style="margin: 10px 0 0 0; color: #856404;">这些文件没有对应的文章记录，可以安全删除。</p>
+                        </div>
+                        
+                        <!-- 全选控制 -->
+                        <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="selectAllFiles" style="margin-right: 8px;" onchange="toggleSelectAll(this)">
+                                <span style="font-weight: 600; color: #495057;">全选/取消全选</span>
+                            </label>
+                        </div>
+                        
+                        <div class="orphaned-files-list">
+                            ${orphanedFiles.map((file, index) => `
+                                <div class="orphaned-file-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; margin: 8px 0; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px;">
+                                    <div style="display: flex; align-items: center; flex: 1;">
+                                        <input type="checkbox" class="file-checkbox" data-file-path="${file.path}" style="margin-right: 12px;" onchange="updateDeleteButton(this.closest('.modal'))">
+                                        <div>
+                                            <div style="font-weight: bold; color: #495057;">
+                                                ${file.type === 'HTML文件' ? '📄' : '📁'} ${file.path}
+                                            </div>
+                                            ${file.article_id ? `<div style="font-size: 0.9rem; color: #6c757d;">文章ID: ${file.article_id}</div>` : ''}
+                                        </div>
+                                    </div>
+                                    <div style="color: #6c757d; font-size: 0.9rem;">
+                                        ${formatFileSize(file.size)}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" onclick="this.closest('.modal').remove()">关闭</button>
+                        <button class="btn btn-warning" id="deleteSelectedBtn" onclick="cleanupSelectedFromModal(this.closest('.modal'))" disabled>删除选中文件</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // 全选/取消全选功能
+        function toggleSelectAll(selectAllCheckbox) {
+            const modal = selectAllCheckbox.closest('.modal');
+            const fileCheckboxes = modal.querySelectorAll('.file-checkbox');
+            
+            fileCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            
+            updateDeleteButton(modal);
+        }
+        
+        // 更新删除按钮状态
+        function updateDeleteButton(modal) {
+            const fileCheckboxes = modal.querySelectorAll('.file-checkbox');
+            const deleteBtn = modal.querySelector('#deleteSelectedBtn');
+            const selectAllCheckbox = modal.querySelector('#selectAllFiles');
+            
+            const checkedCount = Array.from(fileCheckboxes).filter(cb => cb.checked).length;
+            
+            if (checkedCount === 0) {
+                deleteBtn.disabled = true;
+                deleteBtn.textContent = '删除选中文件';
+            } else {
+                deleteBtn.disabled = false;
+                deleteBtn.textContent = `删除选中文件 (${checkedCount})`;
+            }
+            
+            // 更新全选复选框状态
+            if (checkedCount === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedCount === fileCheckboxes.length) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+        
+        // 删除选中的文件
+        async function cleanupSelectedFromModal(modal) {
+            const fileCheckboxes = modal.querySelectorAll('.file-checkbox:checked');
+            const selectedFiles = Array.from(fileCheckboxes).map(cb => cb.dataset.filePath);
+            
+            if (selectedFiles.length === 0) {
+                alert('请先选择要删除的文件');
+                return;
+            }
+            
+            if (!confirm(`确定要删除选中的 ${selectedFiles.length} 个文件吗？\n\n此操作不可撤销！`)) return;
+            
+            modal.remove();
+            
+            try {
+                orphanedFilesBtn.disabled = true;
+                orphanedFilesBtn.innerHTML = '<span>⏳</span><span>清理中...</span>';
+                
+                const response = await fetch('/api/cleanup-selected-files', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        file_paths: selectedFiles
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.count > 0) {
+                        let message = `清理完成！删除了 ${result.count} 个选中的文件`;
+                        if (result.deleted_articles && result.deleted_articles.length > 0) {
+                            message += `，同步删除了 ${result.deleted_articles.length} 个文章记录`;
+                        }
+                        showMessage(message, 'success');
+                        console.log('删除的文件:', result.deleted_files);
+                        if (result.deleted_articles) {
+                            console.log('删除的文章记录:', result.deleted_articles);
+                        }
+                    } else {
+                        showMessage('清理完成！没有删除任何文件', 'info');
+                    }
+                    
+                    // 刷新文章列表
+                    loadArticles();
+                } else {
+                    showMessage(`清理失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`清理出错: ${error.message}`, 'error');
+            } finally {
+                orphanedFilesBtn.disabled = false;
+                orphanedFilesBtn.innerHTML = '<span>🧹</span><span>管理未上架文件</span>';
+            }
+        }
+
+        // 从模态框执行清理（保留原有功能作为备用）
+        async function cleanupFromModal(modal) {
+            if (!confirm('确定要删除这些未上架文件吗？\n\n此操作不可撤销！')) return;
+            
+            modal.remove();
+            
+            try {
+                orphanedFilesBtn.disabled = true;
+                orphanedFilesBtn.innerHTML = '<span>⏳</span><span>清理中...</span>';
+                
+                const response = await fetch('/api/cleanup-orphaned-files', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.count > 0) {
+                        showMessage(`清理完成！删除了 ${result.count} 个未上架文件`, 'success');
+                        console.log('删除的文件:', result.deleted_files);
+                    } else {
+                        showMessage('清理完成！没有发现未上架的文件', 'info');
+                    }
+                    
+                    // 刷新文章列表
+                    loadArticles();
+                } else {
+                    showMessage(`清理失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`清理出错: ${error.message}`, 'error');
+            } finally {
+                orphanedFilesBtn.disabled = false;
+                orphanedFilesBtn.innerHTML = '<span>🧹</span><span>管理未上架文件</span>';
+            }
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+
         // 清除缓存
         async function clearCache() {
             if (!confirm('确定要清除缓存吗？')) return;
 
             try {
-                const response = await fetch('http://localhost:8888/api/clear-cache', {
+                const response = await fetch('/api/clear-cache', {
                     method: 'POST'
                 });
 
@@ -1142,15 +2120,44 @@
         }
 
         // 更新统计信息
-        function updateStats() {
+        async function updateStats() {
             totalArticles.textContent = articles.length;
             
             const today = new Date().toISOString().split('T')[0];
             const todayCount = articles.filter(article => article.date === today).length;
             todayArticles.textContent = todayCount;
             
-            // 计算图片总数（这里简化处理）
-            totalImages.textContent = articles.length * 5; // 假设每篇文章平均5张图片
+            // 获取真实的图片总数
+            try {
+                const response = await fetch('/api/images/count');
+                const data = await response.json();
+                if (data.success) {
+                    totalImages.textContent = data.count;
+                } else {
+                    totalImages.textContent = '-';
+                }
+            } catch (error) {
+                totalImages.textContent = '-';
+            }
+            
+            // 更新分类统计
+            const aiTechArticles = articles.filter(article => 
+                article.tags.some(tag => tag.includes('AI技术篇章'))
+            );
+            const aiReportArticles = articles.filter(article => 
+                article.tags.some(tag => tag.includes('AI周报'))
+            );
+            const pdfArticles = articles.filter(article => 
+                article.tags.some(tag => tag.includes('PDF解读'))
+            );
+            const wechatArticles = articles.filter(article => 
+                article.source === '微信公众号'
+            );
+            
+            aiTechCount.textContent = aiTechArticles.length;
+            aiReportCount.textContent = aiReportArticles.length;
+            pdfCount.textContent = pdfArticles.length;
+            wechatCount.textContent = wechatArticles.length;
         }
 
         // 设置加载状态
@@ -1196,7 +2203,7 @@
                 sendEmailBtn.textContent = '发送中...';
                 showMessage('正在发送邮件，请稍候...', 'info');
                 
-                const response = await fetch('http://localhost:8888/api/send-email', {
+                const response = await fetch('/api/send-email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
