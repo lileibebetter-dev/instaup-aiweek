@@ -91,7 +91,7 @@ PDF内容（前2000字符）：
 要求：
 - 提取文档开头部分的标题，通常是论文的正式标题
 - 中文翻译要准确、专业
-- 如果找不到明确的标题，请返回"PDF文档解读"
+- 如果找不到明确的标题，请返回"论文解读"
 """
             
             # 调用API提取标题
@@ -108,8 +108,8 @@ PDF内容（前2000字符）：
             
             # 解析返回的标题
             lines = title_content.split('\n')
-            english_title = "PDF文档解读"
-            chinese_title = "PDF文档解读"
+            english_title = "论文解读"
+            chinese_title = "论文解读"
             
             for line in lines:
                 if line.startswith('1. 英文标题：'):
@@ -121,9 +121,9 @@ PDF内容（前2000字符）：
             
         except Exception as e:
             print(f"提取标题失败: {str(e)}")
-            return "PDF文档解读", "PDF文档解读"
+            return "论文解读", "论文解读"
 
-    def call_llm_api(self, text, title="PDF文档解读"):
+    def call_llm_api(self, text, title="论文解读", download_link=None):
         """调用火山方舟LLM API生成解读文章"""
         try:
             # 先提取论文标题
@@ -226,12 +226,15 @@ PDF内容（前2000字符）：
             llm_content = response.choices[0].message.content
             
             # 添加下载链接部分
-            content = llm_content + """
+            download_href = download_link if download_link else "#"
+            download_text = "下载PDF文档" if download_link else "PDF文档已上传"
+            
+            content = llm_content + f"""
             
             <div class="download-section" style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
                 <h3>📥 原始文档下载</h3>
                 <p>如需查看完整内容，请下载原始PDF文档：</p>
-                <a href="#" class="download-link" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">下载PDF文档</a>
+                <a href="{download_href}" class="download-link" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;" {"target='_blank'" if download_link else ""}>{download_text}</a>
             </div>
             """
             
@@ -309,7 +312,7 @@ PDF内容（前2000字符）：
         
         return key_points[:5]  # 返回前5个关键点
     
-    def create_article_from_pdf(self, pdf_path, custom_title=None, custom_tags=None):
+    def create_article_from_pdf(self, pdf_path, custom_title=None, custom_tags=None, download_link=None):
         """从PDF创建文章"""
         try:
             # 提取PDF文本
@@ -318,7 +321,7 @@ PDF内容（前2000字符）：
                 return None, error
             
             # 调用LLM生成解读内容
-            content, error = self.call_llm_api(text, custom_title)
+            content, error = self.call_llm_api(text, custom_title, download_link)
             if error:
                 return None, error
             
@@ -334,7 +337,7 @@ PDF内容（前2000字符）：
                 title = custom_title
             
             # 生成标签
-            tags = custom_tags or ["AI技术篇章", "PDF解读", "文档分析", "AI解读"]
+            tags = custom_tags or ["AI技术篇章", "论文解读", "文档分析", "AI解读"]
             if isinstance(tags, str):
                 tags = [tag.strip() for tag in tags.split(',') if tag.strip()]
             
@@ -345,14 +348,15 @@ PDF内容（前2000字符）：
             article_data = {
                 'id': article_id,
                 'title': title,
-                'source': 'PDF文档解读',
+                'source': '论文解读',
                 'summary': summary,
-                'url': f"/uploads/pdf/{os.path.basename(pdf_path)}",  # PDF下载链接
+                'url': download_link or f"/uploads/pdf/{os.path.basename(pdf_path)}",  # 优先使用自定义下载链接
                 'date': datetime.now().strftime('%Y-%m-%d'),
                 'tags': tags,
                 'content': content,
                 'pdf_path': pdf_path,  # 保存PDF路径用于下载
-                'original_filename': os.path.basename(pdf_path)
+                'original_filename': os.path.basename(pdf_path),
+                'download_link': download_link  # 保存自定义下载链接
             }
             
             # 生成HTML文件

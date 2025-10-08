@@ -632,7 +632,7 @@
                         📰 微信公众号文章
                     </button>
                     <button type="button" class="type-btn" data-type="pdf">
-                        📄 PDF文档解读
+                        📄 论文解读
                     </button>
                 </div>
             </div>
@@ -666,7 +666,7 @@
                 </button>
             </form>
             
-            <!-- PDF文档解读表单 -->
+            <!-- 论文解读表单 -->
             <form id="pdfForm" class="article-form" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="pdfFile" class="form-label">选择PDF文件</label>
@@ -683,7 +683,14 @@
                 <div class="form-group">
                     <label for="pdfTags" class="form-label">自定义标签（可选）</label>
                     <input type="text" id="pdfTags" class="form-input" 
-                           placeholder="用逗号分隔，如：AI技术篇章,PDF解读,文档分析">
+                           placeholder="用逗号分隔，如：AI技术篇章,论文解读,文档分析">
+                </div>
+                
+                <div class="form-group">
+                    <label for="downloadLink" class="form-label">下载链接（可选）</label>
+                    <input type="url" id="downloadLink" class="form-input" 
+                           placeholder="https://drive.weixin.qq.com/s?k=ADIAqwfNACYHi8vrQm">
+                    <small class="form-help">添加论文的下载链接，用户可以直接下载原始PDF</small>
                 </div>
                 
                 <button type="submit" class="btn" id="pdfSubmitBtn">
@@ -740,7 +747,7 @@
                     </div>
                     <div class="stat-card" style="min-width: 120px;">
                         <div class="stat-number" id="pdfCount">-</div>
-                        <div class="stat-label">PDF解读</div>
+                        <div class="stat-label">论文解读</div>
                     </div>
                     <div class="stat-card" style="min-width: 120px;">
                         <div class="stat-number" id="wechatCount">-</div>
@@ -761,7 +768,7 @@
                             <option value="">所有分类</option>
                             <option value="AI技术篇章">AI技术篇章</option>
                             <option value="AI周报">AI周报</option>
-                            <option value="PDF解读">PDF解读</option>
+                            <option value="论文解读">论文解读</option>
                             <option value="微信公众号">微信公众号</option>
                         </select>
                     </div>
@@ -769,7 +776,7 @@
                         <select id="sourceFilter" class="form-input">
                             <option value="">所有来源</option>
                             <option value="微信公众号">微信公众号</option>
-                            <option value="PDF文档解读">PDF文档解读</option>
+                            <option value="论文解读">论文解读</option>
                             <option value="AI周报生成器">AI周报生成器</option>
                         </select>
                     </div>
@@ -870,6 +877,11 @@
                     <label for="editArticleUrl" class="form-label">文章链接</label>
                     <input type="url" id="editArticleUrl" class="form-input" placeholder="请输入文章链接">
                 </div>
+                <div class="form-group" id="editDownloadLinkGroup" style="display: none;">
+                    <label for="editDownloadLink" class="form-label">下载链接</label>
+                    <input type="url" id="editDownloadLink" class="form-input" placeholder="https://drive.weixin.qq.com/s?k=ADIAqwfNACYHi8vrQm">
+                    <small class="form-help">论文解读文章的下载链接</small>
+                </div>
                 <div class="form-group">
                     <label for="editArticleDate" class="form-label">发布日期</label>
                     <input type="date" id="editArticleDate" class="form-input">
@@ -888,8 +900,8 @@
                             <span class="category-label">AI周报</span>
                         </label>
                         <label class="category-option">
-                            <input type="checkbox" id="edit-cat-pdf" value="PDF解读">
-                            <span class="category-label">PDF解读</span>
+                            <input type="checkbox" id="edit-cat-pdf" value="论文解读">
+                            <span class="category-label">论文解读</span>
                         </label>
                         <label class="category-option">
                             <input type="checkbox" id="edit-cat-wechat" value="微信公众号">
@@ -1026,6 +1038,18 @@
             document.getElementById('editArticleUrl').value = article.url || '';
             document.getElementById('editArticleDate').value = article.date || '';
             
+            // 处理下载链接字段
+            const downloadLinkGroup = document.getElementById('editDownloadLinkGroup');
+            const downloadLinkInput = document.getElementById('editDownloadLink');
+            
+            if (article.source === '论文解读') {
+                downloadLinkGroup.style.display = 'block';
+                downloadLinkInput.value = article.download_link || '';
+            } else {
+                downloadLinkGroup.style.display = 'none';
+                downloadLinkInput.value = '';
+            }
+            
             // 重置所有复选框
             document.querySelectorAll('#editArticleModal input[type="checkbox"]').forEach(cb => {
                 cb.checked = false;
@@ -1041,7 +1065,7 @@
             
             // 设置自定义标签
             customTags = article.tags.filter(tag => 
-                !['AI技术篇章', 'AI周报', 'PDF解读', '微信公众号', 'agent', 'llm', '产品设计', '技术', '图像生成', '论文'].includes(tag)
+                !['AI技术篇章', 'AI周报', '论文解读', '微信公众号', 'agent', 'llm', '产品设计', '技术', '图像生成', '论文'].includes(tag)
             );
             updateEditCustomTagsDisplay();
             
@@ -1066,6 +1090,7 @@
             const summary = document.getElementById('editArticleSummary').value.trim();
             const url = document.getElementById('editArticleUrl').value.trim();
             const date = document.getElementById('editArticleDate').value;
+            const downloadLink = document.getElementById('editDownloadLink').value.trim();
             
             if (!title) {
                 alert('请输入文章标题');
@@ -1101,7 +1126,8 @@
                         source: source,
                         summary: summary,
                         url: url,
-                        date: date
+                        date: date,
+                        download_link: downloadLink
                     })
                 });
                 
@@ -1294,6 +1320,7 @@
                 formData.append('file', file);
                 formData.append('customTitle', pdfTitle.value.trim() || '');
                 formData.append('customTags', pdfTags.value.trim() || '');
+                formData.append('downloadLink', document.getElementById('downloadLink').value.trim() || '');
                 
                 const response = await fetch('/api/upload-pdf', {
                     method: 'POST',
@@ -1303,7 +1330,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showMessage('PDF解读文章生成成功！正在重新构建网站...', 'success');
+                    showMessage('论文解读文章生成成功！正在重新构建网站...', 'success');
                     currentArticle = result.article;
                     pdfPreviewBtn.style.display = 'inline-block';
                     pdfForm.reset();
@@ -1567,7 +1594,7 @@
                 let className = 'default';
                 if (tag.includes('AI技术篇章')) className = 'ai-tech';
                 else if (tag.includes('AI周报')) className = 'ai-report';
-                else if (tag.includes('PDF解读')) className = 'pdf-analysis';
+                else if (tag.includes('论文解读')) className = 'pdf-analysis';
                 else if (tag.includes('微信公众号')) className = 'wechat';
                 
                 return `<span class="category-tag ${className}">${tag}</span>`;
@@ -2148,7 +2175,7 @@
                 article.tags.some(tag => tag.includes('AI周报'))
             );
             const pdfArticles = articles.filter(article => 
-                article.tags.some(tag => tag.includes('PDF解读'))
+                article.tags.some(tag => tag.includes('论文解读'))
             );
             const wechatArticles = articles.filter(article => 
                 article.source === '微信公众号'

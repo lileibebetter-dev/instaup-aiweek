@@ -13,6 +13,7 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            padding-top: 80px !important; /* 为固定面包屑预留空间 */
         }
         
         .article-header {
@@ -131,6 +132,17 @@
     <div class="pixel-bg"></div>
     
     <div class="article-container">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb">
+            <span class="breadcrumb-item">
+                <a href="../index.html" class="breadcrumb-link">🏠 首页</a>
+            </span>
+            <span class="breadcrumb-item">
+                <a href="../index.html" class="breadcrumb-link">📱 公众号文章</a>
+            </span>
+            <span class="breadcrumb-item breadcrumb-current">实测Kimi全新Agent模型「OK Computer」，很OK</span>
+        </nav>
+        
         <header class="article-header">
             <h1 class="article-title">实测Kimi全新Agent模型「OK Computer」，很OK</h1>
             <div class="article-meta">

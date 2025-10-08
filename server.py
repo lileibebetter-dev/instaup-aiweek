@@ -126,7 +126,7 @@ def delete_article(article_id):
             except Exception as e:
                 print(f"删除HTML文件失败: {e}")
         
-        # 删除PDF文件（如果是PDF解读文章）
+        # 删除PDF文件（如果是论文解读文章）
         if 'pdf_path' in article_to_delete:
             pdf_file = article_to_delete['pdf_path']
             if os.path.exists(pdf_file):
@@ -170,6 +170,7 @@ def update_article():
         summary = data.get('summary')
         url = data.get('url')
         date = data.get('date')
+        download_link = data.get('download_link')
         
         if not article_id:
             return jsonify({
@@ -204,6 +205,11 @@ def update_article():
             article['url'] = url
         if date:
             article['date'] = date
+        if download_link:
+            article['download_link'] = download_link
+            # 如果是论文解读文章，也更新URL为下载链接
+            if article.get('source') == '论文解读':
+                article['url'] = download_link
         
         # 保存文章列表
         if save_articles(articles):
@@ -814,6 +820,7 @@ def upload_pdf():
         # 获取自定义参数
         custom_title = request.form.get('customTitle')
         custom_tags = request.form.get('customTags')
+        download_link = request.form.get('downloadLink')
         
         # 创建PDF处理器
         processor = PDFProcessor()
@@ -828,7 +835,7 @@ def upload_pdf():
         
         # 从PDF创建文章
         article_data, error = processor.create_article_from_pdf(
-            pdf_path, custom_title, custom_tags
+            pdf_path, custom_title, custom_tags, download_link
         )
         
         if error:
@@ -841,7 +848,7 @@ def upload_pdf():
         if processor.update_articles_json(article_data):
             return jsonify({
                 'success': True,
-                'message': 'PDF解读文章生成成功',
+                'message': '论文解读文章生成成功',
                 'article': article_data
             })
         else:
